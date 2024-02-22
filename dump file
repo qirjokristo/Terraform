@@ -1,0 +1,19 @@
+ingress {
+      from_port       = 80
+      to_port         = 80
+      protocol        = "tcp"
+      description     = "Allow connection between load balancer and server"
+      security_groups = [aws_security_group.ec2_sg]
+    }
+
+
+
+
+
+    ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    description     = "Allow connection between load balancer and server"
+    security_groups = [aws_security_group.elb_sg]
+  }

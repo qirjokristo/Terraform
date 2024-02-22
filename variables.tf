@@ -12,3 +12,9 @@ variable "common_tags" {
   }
 
 }
+
+variable "cidr_all" {
+  type        = string
+  description = "Cidr for all ips"
+  default     = "0.0.0.0/0"
+}

@@ -36,7 +36,7 @@ resource "aws_internet_gateway" "kristo" {
 resource "aws_route_table" "igw" {
   vpc_id = aws_vpc.kristo_tf.id
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block = var.cidr_all
     gateway_id = aws_internet_gateway.kristo.id
   }
   tags = var.common_tags
