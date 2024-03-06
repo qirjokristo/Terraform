@@ -5,13 +5,13 @@ resource "aws_secretsmanager_secret" "rds" {
 }
 
 resource "aws_secretsmanager_secret_version" "rds" {
-  depends_on = [ aws_db_instance.terra ]
-  secret_id     = aws_secretsmanager_secret.rds.id
+  depends_on = [aws_db_instance.terra]
+  secret_id  = aws_secretsmanager_secret.rds.id
   secret_string = jsonencode({
-    username              = var.db_user,
-    password              = random_password.rds.result,
-    host                  = aws_db_instance.terra.address,
-    dbClusterIdentifier  = "kristo-test"
+    username            = var.db_user,
+    password            = random_password.rds.result,
+    host                = aws_db_instance.terra.address,
+    dbClusterIdentifier = "kristo-test"
   })
 }
   

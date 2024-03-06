@@ -4,7 +4,7 @@ data "aws_availability_zones" "online_azs" {
 
 resource "aws_vpc" "terra" {
   cidr_block = "10.233.0.0/16"
-  tags       = var.common_tags
+  tags       = merge(var.common_tags,{Name = "Kristo-project"})
 }
 
 resource "aws_subnet" "pub" {
@@ -29,21 +29,21 @@ resource "aws_subnet" "priv" {
 
 }
 
-resource "aws_internet_gateway" "kristo" {
+resource "aws_internet_gateway" "terra" {
   vpc_id = aws_vpc.terra.id
-  tags   = var.common_tags
+  tags       = merge(var.common_tags,{Name = "Kristo-project"})
 }
 
 resource "aws_route_table" "igw" {
   vpc_id = aws_vpc.terra.id
   route {
     cidr_block = var.cidr_all
-    gateway_id = aws_internet_gateway.kristo.id
+    gateway_id = aws_internet_gateway.terra.id
   }
-  tags = var.common_tags
+ tags       = merge(var.common_tags,{Name = "Kristo-project"})
 }
 
-resource "aws_route_table_association" "kristo" {
+resource "aws_route_table_association" "terra" {
   count          = length(aws_subnet.pub)
   route_table_id = aws_route_table.igw.id
   subnet_id      = aws_subnet.pub[count.index].id

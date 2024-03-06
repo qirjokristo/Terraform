@@ -20,9 +20,9 @@ variable "cidr_all" {
 }
 
 variable "db_user" {
-  sensitive = true
+  sensitive   = true
   description = "Database master username credentials"
-  type = string
-  default = "admin"
-  
+  type        = string
+  default     = "admin"
+
 }
