@@ -19,15 +19,10 @@ variable "cidr_all" {
   default     = "0.0.0.0/0"
 }
 
-variable "db_tmp_cred" {
-  sensitive   = true
-  description = "Database master credentials"
-  type = object({
-    username = string
-    password = string
-  })
-  default = {
-    username = "admin"
-    password = "admin"
-  }
+variable "db_user" {
+  sensitive = true
+  description = "Database master username credentials"
+  type = string
+  default = "admin"
+  
 }
