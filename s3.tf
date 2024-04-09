@@ -8,4 +8,6 @@ resource "aws_s3_object" "file" {
   bucket = aws_s3_bucket.kristo.id
   key    = each.value
   source = each.value
+  tags = var.common_tags
 }
+
