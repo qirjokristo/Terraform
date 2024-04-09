@@ -13,6 +13,12 @@ variable "common_tags" {
 
 }
 
+variable "vpc_cidr" {
+  type        = string
+  description = "Cidr for vpc"
+  default     = "10.233.0.0/16"
+}
+
 variable "cidr_all" {
   type        = string
   description = "Cidr for all ips"
@@ -24,5 +30,12 @@ variable "db_user" {
   description = "Database master username credentials"
   type        = string
   default     = "admin"
+
+}
+
+variable "files" {
+  type        = list(string)
+  description = "Files to be uploaded to S3"
+  default     = ["files/authentication.php", "files/aws.zip", "files/connection.php", "files/index.html", "files/style.css"]
 
 }

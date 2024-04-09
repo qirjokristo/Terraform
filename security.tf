@@ -1,7 +1,7 @@
 resource "aws_security_group" "elb_sg" {
   name        = "alb_sg"
   description = "Security group for the load balancer"
-  vpc_id      = aws_vpc.terra.id
+  vpc_id      = aws_vpc.relic.id
   tags        = var.common_tags
 
   ingress {
@@ -23,7 +23,7 @@ resource "aws_security_group" "elb_sg" {
 resource "aws_security_group" "ec2_sg" {
   name        = "server_sg"
   description = "Security group for the template in the asg"
-  vpc_id      = aws_vpc.terra.id
+  vpc_id      = aws_vpc.relic.id
   tags        = var.common_tags
 
   egress {
@@ -37,7 +37,7 @@ resource "aws_security_group" "ec2_sg" {
 resource "aws_security_group" "rds_sg" {
   name        = "db_sg"
   description = "Security group for the database"
-  vpc_id      = aws_vpc.terra.id
+  vpc_id      = aws_vpc.relic.id
   tags        = var.common_tags
   egress {
     from_port   = 0

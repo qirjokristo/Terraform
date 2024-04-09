@@ -14,4 +14,5 @@ resource "aws_db_instance" "terra" {
   vpc_security_group_ids      = [aws_security_group.rds_sg.id]
   tags                        = var.common_tags
   db_subnet_group_name        = aws_db_subnet_group.rds.id
+  skip_final_snapshot         = true
 }

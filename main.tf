@@ -1,8 +1,8 @@
 provider "aws" {
 
   ##Temporary access keys for sandbox
-  #  access_key = "AKIARP4IYPMNCWUEKFWM"
-  #  secret_key = "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"
+  #  access_key = "AKIA5FTZBQ3OTX7BWQP6"
+  #  secret_key = "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"
   region = "us-east-1"
 }
 

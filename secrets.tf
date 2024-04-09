@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "rds" {
-  name        = "rdssecret"
+  name        = "kristosecret"
   description = "Secret for db credentials"
   tags        = var.common_tags
 }
