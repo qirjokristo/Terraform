@@ -4,14 +4,6 @@ resource "aws_security_group" "elb_sg" {
   vpc_id      = aws_vpc.relic.id
   tags        = var.common_tags
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    description = "allow https global"
-    cidr_blocks = [var.cidr_all]
-  }
-
   egress {
     from_port   = 0
     to_port     = 0

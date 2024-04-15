@@ -16,27 +16,16 @@ resource "aws_instance" "kristo" {
   root_block_device {
     delete_on_termination = true
   }
-  user_data = <<EOF
-  #!/bin/bash
-apt-get update -y
-apt-get install tasksel -y
-tasksel install lamp-server
-apt install php-mbstring -y
-apt install unzip -y
-apt install awscli -y
-mysql --host=${aws_db_instance.terra.address} --user=admin --password=adminadmin --execute "CREATE DATABASE project;
-USE project;
-CREATE TABLE login (username varchar(10),password varchar(10));
-INSERT INTO login VALUES ('kristo','qirjo'),('marko','skendo'),('ardit','shehu');
-"
-aws s3 sync ${aws_s3_bucket.kristo.bucket}/files/* /var/www/html/
-unzip /var/www/html/aws.zip
-rm /var/www/html/aws.zip
-echo "<h3>Instance id:$(curl http://169.254.169.254/latest/meta-data/instance-id)</h3> >>index.html
-systemctl restart apache2
+  user_data = templatefile("${path.module}/templates/userdata.tpl", {
+    db_host    = aws_db_instance.terra.address
+    aws_bucket = aws_s3_bucket.kristo.bucket
+    password   = random_password.rds.result
+    }
+  )
 
-}
-EOF
+
+
+
 }
 
 resource "time_sleep" "wait" {
@@ -47,16 +36,17 @@ resource "time_sleep" "wait" {
 resource "aws_ami_from_instance" "kristo" {
   name               = "kristo-golden-ami"
   source_instance_id = aws_instance.kristo.id
-  depends_on = [ time_sleep.wait ]
+  depends_on         = [time_sleep.wait]
+  tags               = var.common_tags
 }
 
 
-  resource "aws_launch_template" "kristo" {
-  name = "kristo-asg"
+resource "aws_launch_template" "kristo" {
+  name = "kristo-lt"
   iam_instance_profile {
     name = aws_iam_role.kristo.name
   }
-  image_id               = data.aws_ami.ubuntu2004
+  image_id               = aws_ami_from_instance.kristo.id
   instance_type          = "t3.micro"
-  vpc_security_group_ids = aws_security_group.ec2_sg.id
+  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
 }
