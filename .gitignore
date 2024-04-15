@@ -3,3 +3,5 @@
 .terraform/providers/registry.terraform.io/hashicorp/random/3.6.0/windows_amd64/terraform-provider-random_v3.6.0_x5.exe
 .terraform.tfstate.lock.info
 terraform.tfstate
+terraform.tfstate.backup
+.terraform/providers/registry.terraform.io/hashicorp/time/0.11.1/windows_amd64/terraform-provider-time_v0.11.1_x5.exe
