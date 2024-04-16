@@ -36,3 +36,27 @@ unzip /var/www/html/aws.zip
 rm /var/www/html/aws.zip
 echo "<h3>Instance id:$(curl http://169.254.169.254/latest/meta-data/instance-id)</h3> >>index.html
 systemctl restart apache2
+
+
+resource "time_sleep" "wait" {
+  depends_on      = [aws_instance.kristo]
+  create_duration = "5m"
+
+}
+resource "aws_ami_from_instance" "kristo" {
+  name               = "kristo-golden-ami"
+  source_instance_id = aws_instance.kristo.id
+  depends_on         = [time_sleep.wait]
+  tags               = var.common_tags
+}
+
+
+resource "aws_launch_template" "kristo" {
+  name = "kristo-lt"
+  iam_instance_profile {
+    name = aws_iam_role.kristo.name
+  }
+  image_id               = aws_ami_from_instance.kristo.id
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+}
