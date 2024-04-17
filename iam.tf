@@ -1,6 +1,6 @@
 resource "aws_iam_role" "kristo" {
-  name = "kristo_role"
-  tags = var.common_tags
+  name               = "kristo_role"
+  tags               = var.common_tags
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",

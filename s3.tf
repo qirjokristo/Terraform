@@ -6,7 +6,7 @@ resource "aws_s3_object" "file" {
   for_each = { for idx, file in var.files : idx => file }
 
   bucket = aws_s3_bucket.kristo.id
-  key    = each.value
+  key    = trimprefix(each.value, "files/")
   source = each.value
   tags   = var.common_tags
 }

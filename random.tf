@@ -1,6 +1,6 @@
 resource "random_password" "rds" {
   length  = 24
-  special = true
+  special = false
 }
 
 resource "random_integer" "bucket_name" {
