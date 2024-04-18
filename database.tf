@@ -4,7 +4,7 @@ resource "aws_db_subnet_group" "rds" {
   subnet_ids = aws_subnet.priv[*].id
 }
 
-resource "aws_db_instance" "terra" {
+resource "aws_db_instance" "kristo" {
   identifier             = "kristo-test"
   allocated_storage      = 10
   engine                 = "mysql"

@@ -59,15 +59,6 @@ resource "aws_security_group_rule" "ingress_ec2_elb" {
   source_security_group_id = aws_security_group.elb_sg.id
 }
 
-resource "aws_security_group_rule" "ingress_ec2_rds" {
-  type                     = "ingress"
-  security_group_id        = aws_security_group.ec2_sg.id
-  from_port                = 3306
-  to_port                  = 3306
-  protocol                 = "tcp"
-  description              = "Allow connection between database and server"
-  source_security_group_id = aws_security_group.rds_sg.id
-}
 resource "aws_security_group_rule" "ingress_rds_ec2" {
   type                     = "ingress"
   security_group_id        = aws_security_group.rds_sg.id
