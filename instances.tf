@@ -40,7 +40,7 @@ resource "aws_ami_from_instance" "kristo" {
 
 
 resource "aws_launch_template" "kristo" {
-  name     = "kristo-lt"
+  name = "kristo-lt"
   iam_instance_profile {
     name = aws_iam_instance_profile.kristo.name
   }
@@ -48,7 +48,7 @@ resource "aws_launch_template" "kristo" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
   tags                   = var.common_tags
-  user_data = base64encode(templatefile("${path.module}/templates/lt_userdata.tpl",{}))
+  user_data              = filebase64("${path.module}/templates/lt_userdata.tpl")
   tag_specifications {
     resource_type = "instance"
     tags          = var.common_tags
@@ -61,7 +61,7 @@ resource "aws_autoscaling_group" "kristo" {
   max_size                  = length(data.aws_availability_zones.online.names)
   desired_capacity          = 3
   health_check_type         = "ELB"
-  health_check_grace_period = 60
+  health_check_grace_period = 20
   vpc_zone_identifier       = aws_subnet.pub[*].id
   target_group_arns         = [aws_lb_target_group.kristo.arn]
   launch_template {

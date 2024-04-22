@@ -8,7 +8,14 @@ resource "aws_lb_target_group" "kristo" {
     type    = "lb_cookie"
   }
   health_check {
-    enabled = true
+    enabled             = true
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    interval            = 5
+    path                = "/"
+    port                = 80
+    protocol            = "HTTP"
+    timeout             = 4
   }
   tags = var.common_tags
 }
