@@ -7,5 +7,5 @@
 # }
 
 output "lb_dns" {
-  value = "http://${aws_lb.kristo.dns_name}"
+  value = local.website
 }

@@ -41,7 +41,7 @@ variable "files" {
 }
 
 variable "zone_name" {
-type = string
-description = "zone_idn_name"
-default = null
+  type        = string
+  description = "zone_idn_name"
+  default     = null
 }

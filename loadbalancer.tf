@@ -32,12 +32,13 @@ resource "aws_lb" "kristo" {
 
 resource "aws_lb_listener" "kristo" {
   load_balancer_arn = aws_lb.kristo.arn
-  port              = "80"
-  protocol          = "HTTP"
-  # certificate_arn   = aws_acm_certificate.ssl.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn   = aws_acm_certificate.ssl.arn
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.kristo.arn
   }
   tags = var.common_tags
+  depends_on = [ time_sleep.dns ]
 }

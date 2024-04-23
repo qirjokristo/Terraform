@@ -4,13 +4,19 @@ resource "null_resource" "cmd" {
   }
 }
 
+resource "time_sleep" "zone_fetch" {
+  depends_on = [ null_resource.cmd ]
+  create_duration = "10s"
+}
+
 data "aws_route53_zone" "website" {
-  name = local.zone.Name
+  depends_on   = [time_sleep.zone_fetch]
+  name         = local.apex_zone
   private_zone = false
 }
 
 resource "aws_acm_certificate" "ssl" {
-  domain_name       = "kristo.${data.aws_route53_zone.website.name}"
+  domain_name       = local.website
   validation_method = "DNS"
 }
 
@@ -34,19 +40,23 @@ resource "aws_route53_record" "valid" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = each.value.zone_id
+  zone_id         = data.aws_route53_zone.website.zone_id
 }
+
 resource "aws_route53_record" "lb_dns" {
   zone_id         = data.aws_route53_zone.website.zone_id
-  name            = "kristo.${data.aws_route53_zone.website.name}"
-  type            = "CNAME"
+  name            = local.website
+  type            = "A"
   allow_overwrite = true
 
   alias {
-    zone_id                = aws_acm_certificate.ssl.domain_name
+    zone_id                = aws_lb.kristo.zone_id
     name                   = aws_lb.kristo.dns_name
     evaluate_target_health = true
   }
 }
 
-
+resource "time_sleep" "dns" {
+  depends_on = [ aws_route53_record.valid ]
+  create_duration = "90s"
+}
