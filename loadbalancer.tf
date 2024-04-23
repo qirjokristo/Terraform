@@ -39,6 +39,6 @@ resource "aws_lb_listener" "kristo" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.kristo.arn
   }
-  tags = var.common_tags
-  depends_on = [ time_sleep.dns ]
+  tags       = var.common_tags
+  depends_on = [time_sleep.dns]
 }

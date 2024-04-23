@@ -5,17 +5,25 @@ resource "null_resource" "cmd" {
 }
 
 resource "time_sleep" "zone_fetch" {
-  depends_on = [ null_resource.cmd ]
+  depends_on      = [null_resource.cmd]
   create_duration = "10s"
 }
 
+resource "null_resource" "json" {
+  triggers = {
+    contents = file("${path.module}/templates/zones.tpl")
+  }
+  depends_on = [time_sleep.zone_fetch]
+}
+
 data "aws_route53_zone" "website" {
-  depends_on   = [time_sleep.zone_fetch]
+  depends_on   = [null_resource.json]
   name         = local.apex_zone
   private_zone = false
 }
 
 resource "aws_acm_certificate" "ssl" {
+  depends_on = [ data.aws_route53_zone.website ]
   domain_name       = local.website
   validation_method = "DNS"
 }
@@ -57,6 +65,6 @@ resource "aws_route53_record" "lb_dns" {
 }
 
 resource "time_sleep" "dns" {
-  depends_on = [ aws_route53_record.valid ]
+  depends_on      = [aws_route53_record.valid]
   create_duration = "90s"
 }
