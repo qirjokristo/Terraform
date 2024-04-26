@@ -9,7 +9,7 @@ data "aws_ami" "ubuntu2004" {
 resource "aws_instance" "kristo" {
   ami                    = data.aws_ami.ubuntu2004.id
   subnet_id              = aws_subnet.pub[0].id
-  iam_instance_profile   = aws_iam_instance_profile.kristo.name
+  iam_instance_profile   = aws_iam_instance_profile.ec2.name
   tags                   = merge({ Name = "kristo-ec2" }, var.common_tags)
   instance_type          = "t2.micro"
   depends_on             = [aws_s3_object.file, aws_db_instance.kristo]
@@ -28,7 +28,7 @@ resource "aws_instance" "kristo" {
 
 resource "time_sleep" "wait" {
   depends_on      = [aws_instance.kristo]
-  create_duration = "3m"
+  create_duration = "4m"
 
 }
 resource "aws_ami_from_instance" "kristo" {
@@ -42,7 +42,7 @@ resource "aws_ami_from_instance" "kristo" {
 resource "aws_launch_template" "kristo" {
   name = "kristo-lt"
   iam_instance_profile {
-    name = aws_iam_instance_profile.kristo.name
+    name = aws_iam_instance_profile.ec2.name
   }
   image_id               = aws_ami_from_instance.kristo.id
   instance_type          = "t2.micro"

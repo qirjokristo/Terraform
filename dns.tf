@@ -10,7 +10,7 @@ data "aws_route53_zone" "website" {
 }
 
 resource "aws_acm_certificate" "ssl" {
-  depends_on = [ data.aws_route53_zone.website ]
+  depends_on        = [data.aws_route53_zone.website]
   domain_name       = data.aws_route53_zone.website.name
   validation_method = "DNS"
 }
