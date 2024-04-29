@@ -64,6 +64,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "secret" {
+  depends_on = [ aws_instance.kristo ]
   name   = "secret_retrieve"
   role   = aws_iam_role.ec2.id
   policy = <<EOF
@@ -86,7 +87,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "lambda" {
-  name   = "lambda_admin"
+  name   = "ec2_terminate"
   role   = aws_iam_role.lambda.id
   policy = <<EOF
 {
@@ -94,11 +95,11 @@ resource "aws_iam_role_policy" "lambda" {
   "Statement": [
     {
       "Action": [
-        "lambda:*"
+        "ec2:TerminateInstances"
       ],
       "Effect": "Allow",
       "Resource": [
-                "${aws_lambda.cleanup.arn}"
+                "${aws_instance.kristo.arn}"
             ]
     }
   ]
@@ -112,3 +113,4 @@ resource "aws_iam_instance_profile" "ec2" {
   role = aws_iam_role.ec2.name
   tags = var.common_tags
 }
+
