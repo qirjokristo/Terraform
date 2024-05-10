@@ -1,1 +1,4 @@
 name: Run terraform commands
+
+  on:
+    workflow_dispatch:
