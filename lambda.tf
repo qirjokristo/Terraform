@@ -3,7 +3,7 @@ data "archive_file" "zip" {
   type             = "zip"
   output_file_mode = "0666"
   source {
-    content = <<EOF
+    content  = <<EOF
 import boto3
 
 def lambda_handler(event, context):
@@ -17,7 +17,7 @@ def lambda_handler(event, context):
         'body': "Instance {instance_id} terminated successfully."
     }
 EOF
-filename = "lambda_function.py"
+    filename = "lambda_function.py"
   }
   output_path = "${path.module}/templates/cleanup.zip"
 }
@@ -31,13 +31,13 @@ resource "aws_lambda_function" "cleanup" {
   handler       = "lambda_function.lambda_handler"
   filename      = "${path.module}/templates/cleanup.zip"
   depends_on    = [aws_ami_from_instance.kristo]
-  timeout = 30
+  timeout       = 30
 }
 
 resource "aws_lambda_invocation" "cleanup" {
   function_name = aws_lambda_function.cleanup.function_name
   input = jsonencode({
-     "key1": "valueB",
-     "key2": "value2",
+    "key1" : "valueB",
+    "key2" : "value2",
   })
 }

@@ -39,9 +39,3 @@ variable "files" {
   default     = ["files/authentication.php", "files/aws.zip", "files/connection.php", "files/index.html", "files/style.css"]
 
 }
-
-variable "zone_name" {
-  type        = string
-  description = "zone_idn_name"
-  default     = null
-}

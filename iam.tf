@@ -64,10 +64,10 @@ EOF
 }
 
 resource "aws_iam_role_policy" "secret" {
-  depends_on = [ aws_instance.kristo ]
-  name   = "secret_retrieve"
-  role   = aws_iam_role.ec2.id
-  policy = <<EOF
+  depends_on = [aws_instance.kristo]
+  name       = "secret_retrieve"
+  role       = aws_iam_role.ec2.id
+  policy     = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
