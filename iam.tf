@@ -19,26 +19,6 @@ EOF
 
 }
 
-resource "aws_iam_role" "lambda" {
-  name               = "kristo_lambda_role"
-  tags               = var.common_tags
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
-
-}
 
 resource "aws_iam_role_policy" "s3" {
   name   = "s3_admin"
@@ -64,7 +44,6 @@ EOF
 }
 
 resource "aws_iam_role_policy" "secret" {
-  depends_on = [aws_instance.kristo]
   name       = "secret_retrieve"
   role       = aws_iam_role.eks.id
   policy     = <<EOF
@@ -86,27 +65,6 @@ EOF
 
 }
 
-resource "aws_iam_role_policy" "lambda" {
-  name   = "ec2_terminate"
-  role   = aws_iam_role.lambda.id
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "ec2:TerminateInstances"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-                "${aws_instance.kristo.arn}"
-            ]
-    }
-  ]
-}
-EOF
-
-}
 
 resource "aws_iam_instance_profile" "eks" {
   name = "kristo_eks_profile"
