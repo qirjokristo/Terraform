@@ -13,6 +13,8 @@ jobs:
       - name: Repository clone
         uses: actions/checkout@v4
       - run: echo "Repository ${{ github.repository }}"
+      - run: apt-get update -y
+      - run: apt install awscli -y
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
