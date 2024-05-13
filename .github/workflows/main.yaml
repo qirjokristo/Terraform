@@ -3,8 +3,32 @@ name: Terraform deployment
 on:
   workflow_dispatch:
 jobs:
-  terraform-apply-dns:
-    name: Terraform fetch DNS
+  terraform-apply:
+    name: Terraform deploy
     runs-on: ubuntu-latest
     steps:
+      - run: echo "This job was triggered by ${{ github.event_name }} event"
       - run: echo "This job is running on ${{ runner.os }} runner hosted by Github"
+      - run: echo "This workflow is running on branch ${{ github.ref }}"
+      - name: Repository clone
+        uses: actions/checkout@v4
+      - run: echo "Repository ${{ github.repository }}"
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v3
+      - name: Terraform Init
+        run: terraform init
+        env:
+        AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Terraform validate
+        run: terraform validate
+      - name: Terraform Apply
+        run: terraform apply -target="null_resource.cmd" -auto-approve
+        env:
+        AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        env:
+        AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
