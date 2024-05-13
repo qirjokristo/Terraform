@@ -1,5 +1,5 @@
-resource "aws_iam_role" "ec2" {
-  name               = "kristo_ec2_role"
+resource "aws_iam_role" "eks" {
+  name               = "kristo_eks_role"
   tags               = var.common_tags
   assume_role_policy = <<EOF
 {
@@ -8,7 +8,7 @@ resource "aws_iam_role" "ec2" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "Service": "ec2.amazonaws.com"
+        "Service": "eks.amazonaws.com"
       },
       "Effect": "Allow",
       "Sid": ""
@@ -42,7 +42,7 @@ EOF
 
 resource "aws_iam_role_policy" "s3" {
   name   = "s3_admin"
-  role   = aws_iam_role.ec2.id
+  role   = aws_iam_role.eks.id
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -66,7 +66,7 @@ EOF
 resource "aws_iam_role_policy" "secret" {
   depends_on = [aws_instance.kristo]
   name       = "secret_retrieve"
-  role       = aws_iam_role.ec2.id
+  role       = aws_iam_role.eks.id
   policy     = <<EOF
 {
   "Version": "2012-10-17",
@@ -108,9 +108,9 @@ EOF
 
 }
 
-resource "aws_iam_instance_profile" "ec2" {
-  name = "kristo_ec2_profile"
-  role = aws_iam_role.ec2.name
+resource "aws_iam_instance_profile" "eks" {
+  name = "kristo_eks_profile"
+  role = aws_iam_role.eks.name
   tags = var.common_tags
 }
 
