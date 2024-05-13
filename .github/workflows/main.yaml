@@ -1,4 +1,13 @@
-name: Run terraform commands
+name: Terraform deployment
   
 on:
   workflow_dispatch:
+jobs:
+  terraform-apply-dns:
+    name: Terraform fetch DNS
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This job is running on ${{ runner.os }} runner hosted by Github"
+  terraform-apply:
+    runs-on: ubuntu-latest
+    steps:
