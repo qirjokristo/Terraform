@@ -17,7 +17,6 @@ jobs:
           AWS_DEFAULT_REGION: 'us-east-1'
     steps:
       - run: echo "This job is running on ${{ runner.os }} runner hosted by Github"
-      - run: echo "This workflow is running on branch ${{ github.ref }}"
       - name: Repository clone EC2
         if: github.event.inputs.host == 'ec2'
         uses: actions/checkout@v4
