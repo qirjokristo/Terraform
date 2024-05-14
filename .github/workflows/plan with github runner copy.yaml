@@ -2,6 +2,11 @@ name: Plan Infrastructure Github Runner
   
 on:
   workflow_dispatch:
+    inputs:
+      host:
+        description: "Choose on running on EC2 or EKS"
+        required: false
+        default: "ec2"
 jobs:
   terraform-apply:
     name: Terraform plan
@@ -13,8 +18,14 @@ jobs:
     steps:
       - run: echo "This job is running on ${{ runner.os }} runner hosted by Github"
       - run: echo "This workflow is running on branch ${{ github.ref }}"
-      - name: Repository clone
+      - name: Repository clone EC2
+        if: ${{github.event.inputs.host = "ec2"}}
         uses: actions/checkout@v4
+      - name: Repository clone EC2
+        if: ${{github.event.inputs.host = "eks"}}
+        uses: actions/checkout@v4
+        with:
+          ref: "eks"
       - name: Setup terraform
         uses: hashicorp/setup-terraform@v3
       - name: Terraform Init
@@ -25,3 +36,4 @@ jobs:
         run: terraform apply -target="null_resource.cmd" -auto-approve
       - name: Terraform Plan Infrastructure
         run: terraform plan
+        
