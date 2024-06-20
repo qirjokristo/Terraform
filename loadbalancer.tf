@@ -30,7 +30,7 @@ resource "aws_lb" "kristo" {
   tags                       = var.common_tags
 }
 
-resource "aws_lb_listener" "kristo" {
+resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.kristo.arn
   port              = "443"
   protocol          = "HTTPS"
@@ -43,7 +43,7 @@ resource "aws_lb_listener" "kristo" {
   depends_on = [time_sleep.dns]
 }
 
-resource "aws_lb_listener" "kristo" {
+resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.kristo.arn
   port              = "80"
   protocol          = "HTTP"
