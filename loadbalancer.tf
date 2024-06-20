@@ -42,3 +42,19 @@ resource "aws_lb_listener" "kristo" {
   tags       = var.common_tags
   depends_on = [time_sleep.dns]
 }
+
+resource "aws_lb_listener" "kristo" {
+  load_balancer_arn = aws_lb.kristo.arn
+  port              = "80"
+  protocol          = "HTTP"
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+  tags       = var.common_tags
+}
