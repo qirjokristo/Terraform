@@ -3,7 +3,7 @@ resource "aws_eks_cluster" "kristo" {
   role_arn = aws_iam_role.eks.arn
   vpc_config {
     subnet_ids = aws_subnet.pub[*].id
-    security_group_ids = [aws_security_group.ec2_sg]
+    security_group_ids = [aws_security_group.ec2_sg.id]
     endpoint_public_access = true
     endpoint_private_access = true
   }
