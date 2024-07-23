@@ -1,5 +1,17 @@
+data "aws_iam_policy" "eksworker" {
+  name = "AmazonEKSWorkerNodePolicy"
+}
+
+data "aws_iam_policy" "eksservice" {
+  name = "AmazonEKSWorkerNodePolicy"
+}
+
+data "aws_iam_policy" "ekscni" {
+  name = "AmazonEKSWorkerNodePolicy"
+}
+
 resource "aws_iam_role" "eks" {
-  name               = "kristo_eks_role"
+  name               = "kristo_eks_worker"
   tags               = var.common_tags
   assume_role_policy = <<EOF
 {
@@ -8,7 +20,7 @@ resource "aws_iam_role" "eks" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "Service": "eks.amazonaws.com"
+        "Service": "ec2.amazonaws.com"
       },
       "Effect": "Allow",
       "Sid": ""
@@ -19,6 +31,20 @@ EOF
 
 }
 
+resource "aws_iam_role_policy_attachment" "eksworker" {
+  role = aws_iam_role.eks.name
+  policy_arn = data.aws_iam_policy.eksworker.arn
+}
+
+resource "aws_iam_role_policy_attachment" "eksservice" {
+  role = aws_iam_role.eks.name
+  policy_arn = data.aws_iam_policy.eksservice.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ekscni" {
+  role = aws_iam_role.eks.name
+  policy_arn = data.aws_iam_policy.ekscni.arn
+}
 
 resource "aws_iam_role_policy" "s3" {
   name   = "s3_admin"
@@ -44,9 +70,9 @@ EOF
 }
 
 resource "aws_iam_role_policy" "secret" {
-  name       = "secret_retrieve"
-  role       = aws_iam_role.eks.id
-  policy     = <<EOF
+  name   = "secret_retrieve"
+  role   = aws_iam_role.eks.id
+  policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
