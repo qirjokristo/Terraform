@@ -12,9 +12,9 @@ resource "aws_security_group" "elb_sg" {
   }
 }
 
-resource "aws_security_group" "ec2_sg" {
-  name        = "server_sg"
-  description = "Security group for the template in the asg"
+resource "aws_security_group" "eks_sg" {
+  name        = "cluster_sg"
+  description = "Security group for the eks cluster"
   vpc_id      = aws_vpc.relic.id
   tags        = var.common_tags
 
@@ -49,9 +49,9 @@ resource "aws_security_group_rule" "ingress_elb" {
   cidr_blocks       = [var.cidr_all]
 }
 
-resource "aws_security_group_rule" "ingress_ec2_elb" {
+resource "aws_security_group_rule" "ingress_eks_elb" {
   type                     = "ingress"
-  security_group_id        = aws_security_group.ec2_sg.id
+  security_group_id        = aws_security_group.eks_sg.id
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
@@ -59,12 +59,22 @@ resource "aws_security_group_rule" "ingress_ec2_elb" {
   source_security_group_id = aws_security_group.elb_sg.id
 }
 
-resource "aws_security_group_rule" "ingress_rds_ec2" {
+resource "aws_security_group_rule" "ingress_rds_eks" {
   type                     = "ingress"
   security_group_id        = aws_security_group.rds_sg.id
   from_port                = 3306
   to_port                  = 3306
   protocol                 = "tcp"
   description              = "Allow connection between database and server"
-  source_security_group_id = aws_security_group.ec2_sg.id
+  source_security_group_id = aws_security_group.eks_sg.id
+}
+
+resource "aws_security_group_rule" "ingress_eks_eks" {
+  type                     = "ingress"
+  security_group_id        = aws_security_group.eks_sg.id
+  from_port                = 0
+  to_port                  = 0
+  protocol                 = "-1"
+  description              = "Allow connection between planes"
+  source_security_group_id = aws_security_group.eks_sg.id
 }
