@@ -10,3 +10,4 @@ terraform.tfstate.backup
 templates/cleanup.zip
 templates/zones.tpl
 templates/zones.tpl
+templates/zones.tpl

@@ -16,9 +16,9 @@ terraform apply -target="null_resource.cmd"
 
 ################################################################
 
+terraform plan
+
 terraform apply
-
-
 
 ##################### FOR TESTING ##############################
 aws secretsmanager restore-secret --secret-id kristosecret
