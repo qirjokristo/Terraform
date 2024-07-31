@@ -9,7 +9,7 @@ on:
         default: "ec2"
       state:
         description: "The S3 bucket to save state(Leave empty if no s3 state)"
-        required: true
+        required: false
         default: ""
 jobs:
   terraform-apply:
