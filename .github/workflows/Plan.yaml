@@ -8,7 +8,7 @@ on:
         required: true
         default: "ec2"
       state:
-        description: "The S3 bucket to save state(Leave empty if no s3 state)"
+        description: "The S3 bucket to save output(Leave empty if none is desired)"
         required: true
         default: ""
 jobs:
@@ -42,5 +42,5 @@ jobs:
         run: terraform plan
       - name: Terraform Plan Infrastructure with S3 state
         if: github.event.inputs.state != ''
-        run: terraform plan -state-out=s3://{github.event.inputs.state}
+        run: terraform plan -out=s3://{github.event.inputs.state}
         
