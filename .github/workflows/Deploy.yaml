@@ -42,5 +42,5 @@ jobs:
         run: terraform apply -auto-approve
       - name: Terraform Plan Infrastructure with S3 state
         if: github.event.inputs.state != ''
-        run: terraform apply -auto-approve -state-out=s3://{{ github.event.inputs.state }}
+        run: terraform apply -auto-approve -state-out="s3://{{ github.event.inputs.state }}"
         
