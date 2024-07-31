@@ -38,9 +38,9 @@ jobs:
       - name: Terraform Apply DNS
         run: terraform apply -target="null_resource.cmd" -auto-approve
       - name: Terraform Plan Infrastructure
-        if: github.event.inputs.state == ""
+        if: github.event.inputs.state == ''
         run: terraform plan
       - name: Terraform Plan Infrastructure with S3 state
-        if: github.event.inputs.state != ""
+        if: github.event.inputs.state != ''
         run: terraform plan -state-out=s3://{github.event.inputs.state}
         
