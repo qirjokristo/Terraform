@@ -20,8 +20,22 @@ resource "aws_eks_addon" "eks-pod-identity-agent" {
   addon_name   = "eks-pod-identity-agent"
 }
 
+resource "null_resource" "eks_context" {
+  depends_on = [ aws_eks_cluster.kristo ]
+  provisioner "local-exec" {
+    command = "aws eks update-kubeconfig --name kristo-cluster --region us-east-1"
+  }
+}
+
+resource "null_resource" "calico" {
+  depends_on = [null_resource.eks_context]
+  provisioner "local-exec" {
+    command = "kubectl apply -f ./eks_manifests/calico.yaml"
+  }
+}
+
 resource "aws_eks_node_group" "kristo" {
-  depends_on      = [aws_eks_addon.vpc-cni, aws_eks_addon.eks-pod-identity-agent]
+  depends_on      = [aws_eks_addon.vpc-cni, aws_eks_addon.eks-pod-identity-agent, null_resource.calico]
   cluster_name    = aws_eks_cluster.kristo.name
   subnet_ids      = aws_subnet.pub[*].id
   node_role_arn   = aws_iam_role.eksworker.arn
@@ -35,7 +49,21 @@ resource "aws_eks_node_group" "kristo" {
 }
 
 resource "aws_eks_addon" "aws-ebs-csi-driver" {
-  depends_on = [ aws_eks_node_group.kristo ]
+  depends_on   = [aws_eks_node_group.kristo]
   cluster_name = aws_eks_cluster.kristo.name
   addon_name   = "aws-ebs-csi-driver"
+}
+
+resource "null_resource" "rbac" {
+  depends_on = [aws_eks_node_group.kristo]
+  provisioner "local-exec" {
+    command = "kubectl apply -f ./eks_manifests/rbac-role.yaml"
+  }
+}
+
+resource "null_resource" "alb" {
+  depends_on = [null_resource.rbac]
+  provisioner "local-exec" {
+    command = "kubectl apply -f ./eks_manifests/alb-ingress-controller.yaml"
+  }
 }
