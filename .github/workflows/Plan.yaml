@@ -7,6 +7,10 @@ on:
         description: "Choose on running on ec2 or eks"
         required: true
         default: "ec2"
+      state:
+        description: "The S3 bucket to save state(Leave empty if no s3 state)"
+        required: true
+        default: ""
 jobs:
   terraform-apply:
     name: Terraform plan
@@ -29,10 +33,14 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: Terraform Init
         run: terraform init
-      - name: Terraform validate
+      - name: Terraform Validate
         run: terraform validate
       - name: Terraform Apply DNS
         run: terraform apply -target="null_resource.cmd" -auto-approve
       - name: Terraform Plan Infrastructure
+        if: github.event.inputs.state == ""
         run: terraform plan
+      - name: Terraform Plan Infrastructure with S3 state
+        if: github.event.inputs.state != ""
+        run: terraform plan -state-out=s3://{github.event.inputs.state}
         

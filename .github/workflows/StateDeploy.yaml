@@ -1,0 +1,26 @@
+name: Deploy Terraform State with Github Runner
+  
+on:
+  workflow_dispatch:
+jobs:
+  terraform-apply:
+    name: Terraform State Location Setup
+    runs-on: ubuntu-latest
+    env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
+    steps:
+      - run: echo "This job is running on ${{ runner.os }} runner hosted by Github"
+      - name: Repository clone 's3_state'
+        uses: actions/checkout@v4
+        with:
+          ref: "s3_state"
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v3
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Validate
+        run: terraform validate
+      - name: Terraform Create Bucket and Secret
+        run: terraform apply -auto-approve
