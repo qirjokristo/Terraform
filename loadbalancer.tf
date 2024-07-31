@@ -56,5 +56,5 @@ resource "aws_lb_listener" "http" {
       status_code = "HTTP_301"
     }
   }
-  tags       = var.common_tags
+  tags = var.common_tags
 }
