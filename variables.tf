@@ -10,7 +10,6 @@ variable "common_tags" {
     environment = "Sandbox"
     project     = "Terraform Infrastructure Learning"
   }
-
 }
 
 variable "vpc_cidr" {
