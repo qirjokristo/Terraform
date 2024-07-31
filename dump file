@@ -1,3 +1,0 @@
-trimsuffix(jsondecode(substr("${file("${path.module}/templates/zones.tpl")}", 25, 378)), ".")
-
-
