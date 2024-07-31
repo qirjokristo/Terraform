@@ -42,7 +42,7 @@ jobs:
         run: terraform plan
       - name: Terraform Plan Infrastructure with S3 state
         if: github.event.inputs.state != ''
-        run: terraform plan -out="$GITHUB_REF$GITHUB_RUN_ID.tfplan"
+        run: terraform plan -out="$GITHUB_REF_NAME$GITHUB_RUN_ID.tfplan"
       - name: Copy output to S3
         if: github.event.inputs.state != ''
-        run: aws s3 cp $GITHUB_REF$GITHUB_RUN_ID.tfplan s3://${{github.event.inputs.state}}/plan/$GITHUB_REF$GITHUB_RUN_ID.tfplan
+        run: aws s3 cp $GITHUB_REF_NAME$GITHUB_RUN_ID.tfplan s3://${{github.event.inputs.state}}/plan/$GITHUB_REF_NAME$GITHUB_RUN_ID.tfplan
