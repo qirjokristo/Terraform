@@ -38,3 +38,9 @@ variable "files" {
   default     = ["files/authentication.php", "files/aws.zip", "files/connection.php", "files/index.html", "files/style.css"]
 
 }
+
+variable "region" {
+  type = string
+  description = "Region to be deployed to"
+  default = "us-east-1" 
+}

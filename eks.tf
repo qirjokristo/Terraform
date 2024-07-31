@@ -21,9 +21,9 @@ resource "aws_eks_addon" "eks-pod-identity-agent" {
 }
 
 resource "null_resource" "eks_context" {
-  depends_on = [aws_eks_cluster.kristo]
+  depends_on = [aws_eks_cluster.kristo,]
   provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --name kristo-cluster --region us-east-1"
+    command = "aws eks update-kubeconfig --name kristo-cluster --region ${var.region}"
   }
 }
 
