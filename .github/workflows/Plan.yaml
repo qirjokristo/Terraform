@@ -12,7 +12,7 @@ on:
         required: false
         default: ""
 jobs:
-  terraform-apply:
+  terraform-plan:
     name: Terraform plan
     runs-on: ubuntu-latest
     env:
@@ -42,5 +42,7 @@ jobs:
         run: terraform plan
       - name: Terraform Plan Infrastructure with S3 state
         if: github.event.inputs.state != ''
-        run: terraform plan -out="s3://${{ github.event.inputs.state }}/${{ github.action }}{{ github.run.id }}.tfplan"
-        
+        run: terraform plan -out="${{ github.ref }}{{ github.run.id }}.tfplan"
+      - name: Copy state to S3
+        if: github.event.inputs.state != ''
+        run: aws cp ${{ github.ref }}{{ github.run.id }}.tfplan s3://${{github.event.inputs.state}}/plan/${{ github.ref }}{{ github.run.id }}.tfplan
