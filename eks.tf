@@ -21,7 +21,7 @@ resource "aws_eks_addon" "eks-pod-identity-agent" {
 }
 
 resource "null_resource" "eks_context" {
-  depends_on = [aws_eks_cluster.kristo,]
+  depends_on = [aws_eks_cluster.kristo]
   provisioner "local-exec" {
     command = "aws eks update-kubeconfig --name kristo-cluster --region ${var.region}"
   }
@@ -61,9 +61,27 @@ resource "null_resource" "rbac" {
   }
 }
 
+# resource "null_resource" "albwr" {
+#   depends_on = [aws_eks_cluster.kristo]
+#   provisioner "local-exec" {
+#     command = "echo -e '${templatefile("./eks_manifests/alb-ingress-controller.yaml",
+#       {
+#         cluster = aws_eks_cluster.kristo.name,
+#         vpc     = aws_vpc.relic.id
+#       }
+#     )}' > ${path.module}/eks_manifests/aic.yaml"
+#   }
+# }
+# resource "null_resource" "alb" {
+#   depends_on = [null_resource.albwr]
+#   provisioner "local-exec" {
+#     command = "kubectl apply -f ./eks_manifests/aic.yaml"
+#   }
+# }
+
 resource "null_resource" "alb" {
-  depends_on = [null_resource.rbac]
   provisioner "local-exec" {
     command = "kubectl apply -f ./eks_manifests/alb-ingress-controller.yaml"
   }
 }
+

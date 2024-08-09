@@ -12,6 +12,20 @@ variable "common_tags" {
   }
 }
 
+variable "kube_tags" {
+  type = object({
+    author      = string
+    environment = string
+    project     = string
+  })
+  description = "Tags to be for kubernetes"
+  default = {
+    author      = "Kristo"
+    environment = "Sandbox"
+    project     = "Terraform Infrastructure Learning"
+  }
+}
+
 variable "vpc_cidr" {
   type        = string
   description = "Cidr for vpc"
@@ -40,7 +54,7 @@ variable "files" {
 }
 
 variable "region" {
-  type = string
+  type        = string
   description = "Region to be deployed to"
-  default = "us-east-1" 
+  default     = "us-east-1"
 }

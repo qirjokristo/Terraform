@@ -29,238 +29,50 @@ data "aws_iam_policy" "ebsdriver" {
 resource "aws_iam_role" "ekscontrol" {
   name               = "KristoEKSControlRole"
   tags               = var.common_tags
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "eks.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
+  assume_role_policy = file("${path.module}/iam_policies/sts_eks.json")
 
 }
 
 resource "aws_iam_role" "eksworker" {
   name               = "KristoEKSWorkerRole"
   tags               = var.common_tags
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
+  assume_role_policy = file("${path.module}/iam_policies/sts_ec2.json")
 
 }
 
+resource "aws_iam_role" "alb" {
+  name = "AmazonEKSLoadBalancerControllerRole"
+  tags = var.common_tags
+  assume_role_policy = (templatefile("${path.module}/iam_policies/sts_alb.json", {
+    oidc = aws_eks_cluster.kristo.identity[0].oidc[0].issuer }
+  ))
 
+}
 
 resource "aws_iam_role_policy" "s3" {
-  name   = "s3_admin"
-  role   = aws_iam_role.eksworker.id
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "s3:*"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-                "${aws_s3_bucket.kristo.arn}",
-                "${aws_s3_bucket.kristo.arn}/*"
-            ]
-    }
-  ]
-}
-EOF
-
+  name = "s3_admin"
+  role = aws_iam_role.eksworker.id
+  policy = (templatefile("${path.module}/iam_policies/s3.json", {
+    bucket = aws_s3_bucket.kristo.arn }
+  ))
 }
 
 resource "aws_iam_role_policy" "secret" {
-  name   = "secret_retrieve"
-  role   = aws_iam_role.eksworker.id
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-			"Effect": "Allow",
-			"Action": [
-				"secretsmanager:GetSecretValue"
-			],
-			"Resource": [
-        "${aws_secretsmanager_secret.rds.arn}"
-      ]
-		}
-  ]
-}
-EOF
-
+  name = "secret_retrieve"
+  role = aws_iam_role.eksworker.id
+  policy = (templatefile("${path.module}/iam_policies/secret.json", {
+    secret = aws_secretsmanager_secret.rds.arn }
+  ))
 }
 
-resource "aws_iam_role_policy" "alb-cotroller" {
-  name   = "alb-ingress-controller"
-  role   = aws_iam_role.eksworker.id
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "acm:DescribeCertificate",
-        "acm:ListCertificates",
-        "acm:GetCertificate"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:AuthorizeSecurityGroupIngress",
-        "ec2:CreateSecurityGroup",
-        "ec2:CreateTags",
-        "ec2:DeleteTags",
-        "ec2:DeleteSecurityGroup",
-        "ec2:DescribeAccountAttributes",
-        "ec2:DescribeAddresses",
-        "ec2:DescribeInstances",
-        "ec2:DescribeInstanceStatus",
-        "ec2:DescribeInternetGateways",
-        "ec2:DescribeNetworkInterfaces",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeTags",
-        "ec2:DescribeVpcs",
-        "ec2:ModifyInstanceAttribute",
-        "ec2:ModifyNetworkInterfaceAttribute",
-        "ec2:RevokeSecurityGroupIngress"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "elasticloadbalancing:AddListenerCertificates",
-        "elasticloadbalancing:AddTags",
-        "elasticloadbalancing:CreateListener",
-        "elasticloadbalancing:CreateLoadBalancer",
-        "elasticloadbalancing:CreateRule",
-        "elasticloadbalancing:CreateTargetGroup",
-        "elasticloadbalancing:DeleteListener",
-        "elasticloadbalancing:DeleteLoadBalancer",
-        "elasticloadbalancing:DeleteRule",
-        "elasticloadbalancing:DeleteTargetGroup",
-        "elasticloadbalancing:DeregisterTargets",
-        "elasticloadbalancing:DescribeListenerCertificates",
-        "elasticloadbalancing:DescribeListeners",
-        "elasticloadbalancing:DescribeLoadBalancers",
-        "elasticloadbalancing:DescribeLoadBalancerAttributes",
-        "elasticloadbalancing:DescribeRules",
-        "elasticloadbalancing:DescribeSSLPolicies",
-        "elasticloadbalancing:DescribeTags",
-        "elasticloadbalancing:DescribeTargetGroups",
-        "elasticloadbalancing:DescribeTargetGroupAttributes",
-        "elasticloadbalancing:DescribeTargetHealth",
-        "elasticloadbalancing:ModifyListener",
-        "elasticloadbalancing:ModifyLoadBalancerAttributes",
-        "elasticloadbalancing:ModifyRule",
-        "elasticloadbalancing:ModifyTargetGroup",
-        "elasticloadbalancing:ModifyTargetGroupAttributes",
-        "elasticloadbalancing:RegisterTargets",
-        "elasticloadbalancing:RemoveListenerCertificates",
-        "elasticloadbalancing:RemoveTags",
-        "elasticloadbalancing:SetIpAddressType",
-        "elasticloadbalancing:SetSecurityGroups",
-        "elasticloadbalancing:SetSubnets",
-        "elasticloadbalancing:SetWebAcl"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iam:CreateServiceLinkedRole",
-        "iam:GetServerCertificate",
-        "iam:ListServerCertificates"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "cognito-idp:DescribeUserPoolClient"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "waf-regional:GetWebACLForResource",
-        "waf-regional:GetWebACL",
-        "waf-regional:AssociateWebACL",
-        "waf-regional:DisassociateWebACL"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "tag:GetResources",
-        "tag:TagResources"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "waf:GetWebACL"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "wafv2:GetWebACL",
-        "wafv2:GetWebACLForResource",
-        "wafv2:AssociateWebACL",
-        "wafv2:DisassociateWebACL"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "shield:DescribeProtection",
-        "shield:GetSubscriptionState",
-        "shield:DeleteProtection",
-        "shield:CreateProtection",
-        "shield:DescribeSubscription",
-        "shield:ListProtections"
-      ],
-      "Resource": "*"
-    }
-  ]
+resource "aws_iam_policy" "alb" {
+  name   = "ALB Controller"
+  policy = file("iam_policies/alb.json")
 }
-EOF
 
+resource "aws_iam_role_policy_attachment" "A_AICPolicy" {
+  policy_arn = aws_iam_policy.alb.arn
+  role       = aws_iam_role.alb.name
 }
 
 resource "aws_iam_role_policy_attachment" "C_ClusterPolicy" {
