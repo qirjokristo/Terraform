@@ -40,15 +40,6 @@ resource "aws_iam_role" "eksworker" {
 
 }
 
-resource "aws_iam_role" "alb" {
-  name = "AmazonEKSLoadBalancerControllerRole"
-  tags = var.common_tags
-  assume_role_policy = (templatefile("${path.module}/iam_policies/sts_alb.json", {
-    oidc = aws_eks_cluster.kristo.identity[0].oidc[0].issuer }
-  ))
-
-}
-
 resource "aws_iam_role_policy" "s3" {
   name = "s3_admin"
   role = aws_iam_role.eksworker.id
@@ -63,16 +54,6 @@ resource "aws_iam_role_policy" "secret" {
   policy = (templatefile("${path.module}/iam_policies/secret.json", {
     secret = aws_secretsmanager_secret.rds.arn }
   ))
-}
-
-resource "aws_iam_policy" "alb" {
-  name   = "ALB Controller"
-  policy = file("iam_policies/alb.json")
-}
-
-resource "aws_iam_role_policy_attachment" "A_AICPolicy" {
-  policy_arn = aws_iam_policy.alb.arn
-  role       = aws_iam_role.alb.name
 }
 
 resource "aws_iam_role_policy_attachment" "C_ClusterPolicy" {
@@ -108,4 +89,9 @@ resource "aws_iam_role_policy_attachment" "W_EC2ContainerRegistryReadOnly" {
 resource "aws_iam_role_policy_attachment" "W_AmazonEBSCSIDriverPolicy" {
   policy_arn = data.aws_iam_policy.ebsdriver.arn
   role       = aws_iam_role.eksworker.name
+}
+
+resource "aws_iam_instance_profile" "EKSWorker" {
+  name = "EKS_Worker_Instance_Profile"
+  role = aws_iam_role.eksworker.name
 }

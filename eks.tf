@@ -15,6 +15,16 @@ resource "aws_eks_addon" "vpc-cni" {
   addon_name   = "vpc-cni"
 }
 
+resource "aws_eks_addon" "core-dns" {
+  cluster_name = aws_eks_cluster.kristo.name
+  addon_name   = "coredns"
+}
+
+resource "aws_eks_addon" "kube-proxy" {
+  cluster_name = aws_eks_cluster.kristo.name
+  addon_name   = "kube-proxy"
+}
+
 resource "aws_eks_addon" "eks-pod-identity-agent" {
   cluster_name = aws_eks_cluster.kristo.name
   addon_name   = "eks-pod-identity-agent"
@@ -48,40 +58,23 @@ resource "aws_eks_node_group" "kristo" {
   }
 }
 
+
 resource "aws_eks_addon" "aws-ebs-csi-driver" {
   depends_on   = [aws_eks_node_group.kristo]
   cluster_name = aws_eks_cluster.kristo.name
   addon_name   = "aws-ebs-csi-driver"
 }
 
-resource "null_resource" "rbac" {
-  depends_on = [aws_eks_node_group.kristo]
-  provisioner "local-exec" {
-    command = "kubectl apply -f ./eks_manifests/rbac-role.yaml"
-  }
-}
-
-# resource "null_resource" "albwr" {
-#   depends_on = [aws_eks_cluster.kristo]
+# resource "null_resource" "cert" {
 #   provisioner "local-exec" {
-#     command = "echo -e '${templatefile("./eks_manifests/alb-ingress-controller.yaml",
-#       {
-#         cluster = aws_eks_cluster.kristo.name,
-#         vpc     = aws_vpc.relic.id
-#       }
-#     )}' > ${path.module}/eks_manifests/aic.yaml"
+#     command = "kubectl apply --validate=false -f ./eks_manifests/cert.yaml"
 #   }
 # }
+
 # resource "null_resource" "alb" {
-#   depends_on = [null_resource.albwr]
+#   depends_on = [ null_resource.cert ]
 #   provisioner "local-exec" {
-#     command = "kubectl apply -f ./eks_manifests/aic.yaml"
+#     command = "kubectl apply -f ./eks_manifests/alb.yaml"
 #   }
 # }
-
-resource "null_resource" "alb" {
-  provisioner "local-exec" {
-    command = "kubectl apply -f ./eks_manifests/alb-ingress-controller.yaml"
-  }
-}
 
