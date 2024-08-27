@@ -15,16 +15,6 @@ resource "aws_eks_addon" "vpc-cni" {
   addon_name   = "vpc-cni"
 }
 
-resource "aws_eks_addon" "core-dns" {
-  cluster_name = aws_eks_cluster.kristo.name
-  addon_name   = "coredns"
-}
-
-resource "aws_eks_addon" "kube-proxy" {
-  cluster_name = aws_eks_cluster.kristo.name
-  addon_name   = "kube-proxy"
-}
-
 resource "aws_eks_addon" "eks-pod-identity-agent" {
   cluster_name = aws_eks_cluster.kristo.name
   addon_name   = "eks-pod-identity-agent"
@@ -37,15 +27,41 @@ resource "null_resource" "eks_context" {
   }
 }
 
+# resource "helm_release" "calico" {
+#   dependency_update = true
+#   name       = "calico-release"
+#   repository = "https://docs.tigera.io/calico/charts"
+#   namespace  = "tigera-operator"
+#   create_namespace = true
+#   chart      = "tigera-operator"
+#   version = "v3.28.1"
+#   values = ["${path.module}/eks _manifests/calico_values/values.yaml"]
+# }
+
 resource "null_resource" "calico" {
-  depends_on = [null_resource.eks_context]
+  depends_on = [null_resource.eks_context, aws_eks_addon.vpc-cni]
   provisioner "local-exec" {
     command = "kubectl apply -f ./eks_manifests/calico.yaml"
   }
 }
 
+resource "aws_launch_template" "nodegroup" {
+  name = "nodegroup-lt"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.eks_sg.id]
+  tags                   = var.common_tags
+  tag_specifications {
+    resource_type = "instance"
+    tags          = var.common_tags
+  }
+  metadata_options {
+    http_tokens = "required"
+    http_put_response_hop_limit = 2
+  }
+}
+
 resource "aws_eks_node_group" "kristo" {
-  depends_on      = [aws_eks_addon.vpc-cni, aws_eks_addon.eks-pod-identity-agent, null_resource.calico]
+  depends_on      = [aws_launch_template.nodegroup, null_resource.calico]
   cluster_name    = aws_eks_cluster.kristo.name
   subnet_ids      = aws_subnet.pub[*].id
   node_role_arn   = aws_iam_role.eksworker.arn
@@ -59,11 +75,11 @@ resource "aws_eks_node_group" "kristo" {
 }
 
 
-resource "aws_eks_addon" "aws-ebs-csi-driver" {
-  depends_on   = [aws_eks_node_group.kristo]
-  cluster_name = aws_eks_cluster.kristo.name
-  addon_name   = "aws-ebs-csi-driver"
-}
+# resource "aws_eks_addon" "aws-ebs-csi-driver" {
+#   depends_on   = [aws_eks_node_group.kristo]
+#   cluster_name = aws_eks_cluster.kristo.name
+#   addon_name   = "aws-ebs-csi-driver"
+# }
 
 # resource "null_resource" "cert" {
 #   provisioner "local-exec" {

@@ -24,3 +24,7 @@ terraform apply
 aws secretsmanager restore-secret --secret-id kristosecret
 
 terraform import aws_secretsmanager_secret.rds kristosecret
+
+############### ADD EKS CHARTS REPO ###########################
+
+helm repo add eks https //aws.github.io/eks-charts
