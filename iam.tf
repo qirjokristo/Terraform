@@ -91,6 +91,11 @@ resource "aws_iam_role_policy_attachment" "W_AmazonEBSCSIDriverPolicy" {
   role       = aws_iam_role.eksworker.name
 }
 
+resource "aws_iam_role_policy_attachment" "W_ALBController" {
+  policy_arn = aws_iam_policy.alb.arn
+  role       = aws_iam_role.eksworker.name
+}
+
 resource "aws_iam_instance_profile" "EKSWorker" {
   name = "EKS_Worker_Instance_Profile"
   role = aws_iam_role.eksworker.name

@@ -27,16 +27,6 @@ resource "null_resource" "eks_context" {
   }
 }
 
-# resource "helm_release" "calico" {
-#   dependency_update = true
-#   name       = "calico-release"
-#   repository = "https://docs.tigera.io/calico/charts"
-#   namespace  = "tigera-operator"
-#   create_namespace = true
-#   chart      = "tigera-operator"
-#   version = "v3.28.1"
-#   values = ["${path.module}/eks _manifests/calico_values/values.yaml"]
-# }
 
 resource "null_resource" "calico" {
   depends_on = [null_resource.eks_context, aws_eks_addon.vpc-cni]
@@ -56,12 +46,12 @@ resource "aws_launch_template" "nodegroup" {
   }
   metadata_options {
     http_tokens = "required"
-    http_put_response_hop_limit = 2
+    http_put_response_hop_limit = 3
   }
 }
 
 resource "aws_eks_node_group" "kristo" {
-  depends_on      = [aws_launch_template.nodegroup, null_resource.calico]
+  depends_on      = [aws_launch_template.nodegroup]
   cluster_name    = aws_eks_cluster.kristo.name
   subnet_ids      = aws_subnet.pub[*].id
   node_role_arn   = aws_iam_role.eksworker.arn
@@ -74,12 +64,34 @@ resource "aws_eks_node_group" "kristo" {
   }
 }
 
-
-# resource "aws_eks_addon" "aws-ebs-csi-driver" {
-#   depends_on   = [aws_eks_node_group.kristo]
-#   cluster_name = aws_eks_cluster.kristo.name
-#   addon_name   = "aws-ebs-csi-driver"
+# resource "helm_release" "calico" {
+#   depends_on = [ aws_eks_node_group.kristo ]
+#   dependency_update = true
+#   name       = "tigera-operator"
+#   repository = "https://docs.tigera.io/calico/charts"
+#   namespace  = "calico"
+#   create_namespace = true
+#   chart      = "tigera-operator"
+#   values = [ file("${path.module}/eks_manifests/calico_values/values.yaml") ]
 # }
+
+
+resource "helm_release" "alb" {
+  depends_on = [ aws_eks_node_group.kristo ]
+  dependency_update = true
+  name       = "aws-load-balancer-controller"
+  repository = "https://aws.github.io/eks-charts"
+  namespace  = "kube-system"
+  chart      = "aws-load-balancer-controller"
+  version = "v1.8.2"
+  values = [file("${path.module}/eks_manifests/alb_values/values.yaml")]
+}
+
+resource "aws_eks_addon" "aws-ebs-csi-driver" {
+  depends_on   = [aws_eks_node_group.kristo]
+  cluster_name = aws_eks_cluster.kristo.name
+  addon_name   = "aws-ebs-csi-driver"
+}
 
 # resource "null_resource" "cert" {
 #   provisioner "local-exec" {

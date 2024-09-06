@@ -16,3 +16,9 @@ provider "random" {
 provider "time" {
 
 }
+
+provider "helm" {
+  kubernetes {
+    config_path = "~/.kube/config"
+  }
+}
