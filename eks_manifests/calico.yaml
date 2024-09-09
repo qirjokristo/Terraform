@@ -981,7 +981,7 @@ spec:
                   will add a rule to drop VXLAN encapsulated traffic from workloads
                   [Default: false]'
                 type: boolean
-              awsSrcDstCheck: Disable
+              awsSrcDstCheck:
                 description: 'Set source-destination-check on AWS EC2 instances. Accepted
                   value must be one of "DoNothing", "Enable" or "Disable". [Default:
                   DoNothing]'
