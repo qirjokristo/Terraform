@@ -46,9 +46,9 @@ resource "aws_eks_node_group" "kristo" {
   }
 }
 
-resource "null_resource" "dockerfile build" {
-  depends_on = [aws_eks_cluster.kristo]
-  provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --name kristo-cluster --region ${var.region}"
-  }
-}
+# resource "null_resource" "dockerfile_build" {
+#   depends_on = [aws_eks_cluster.kristo]
+#   provisioner "local-exec" {
+#     command = "aws eks update-kubeconfig --name kristo-cluster --region ${var.region}"
+#   }
+# }

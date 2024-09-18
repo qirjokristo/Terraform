@@ -1,0 +1,63 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kristo-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: kristo-app
+  name: kristo-deployment
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kristo-app
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kristo-app
+    spec:
+      containers:
+      - image: qirjokristo/terraform:latest
+        imagePullPolicy: Always
+        name: kristo-app
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: kristo-app
+  name: kristo-service
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: kristo-app
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: kristo-app
+  name: kristo-ingress
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/subnets: Public subnet 1, Public subnet 2, Public subnet 3, Public subnet 4, Public subnet 5
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: kristo-service
+              port:
+                number: 80
