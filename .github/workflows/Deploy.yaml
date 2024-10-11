@@ -31,6 +31,10 @@ jobs:
           ref: "eks"
       - name: Setup terraform
         uses: hashicorp/setup-terraform@v3
+      - name: Setup helm
+        uses: azure/setup-helm@v4.2.0
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
       - name: Terraform Init
         run: terraform init
       - name: Terraform validate
@@ -40,7 +44,7 @@ jobs:
       - name: Terraform Apply Infrastructure
         if: github.event.inputs.state == ''
         run: terraform apply -auto-approve
-      - name: Terraform Plan Infrastructure with S3 state
+      - name: Terraform Apply Infrastructure with S3 state
         if: github.event.inputs.state != ''
         run: terraform apply -auto-approve -state-out="$GITHUB_REF_NAME.tfstate"
       - name: Copy state to S3
