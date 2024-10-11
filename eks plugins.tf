@@ -69,7 +69,7 @@ resource "helm_release" "alb" {
 resource "null_resource" "pod" {
   depends_on = [helm_release.alb]
   provisioner "local-exec" {
-    command = "kubectl apply -f ./eks_manifests/2048.yaml"
+    command = "kubectl apply -f ./eks_manifests/kristo-app.yaml"
   }
 }
 
