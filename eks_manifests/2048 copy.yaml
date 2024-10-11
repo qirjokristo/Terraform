@@ -49,6 +49,7 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/subnets: Public subnet 1, Public subnet 2, Public subnet 3, Public subnet 4, Public subnet 5
+    alb.ingress.kubernetes.io/tags: environment=Sandbox, author=Kristo
 spec:
   ingressClassName: alb
   rules:
