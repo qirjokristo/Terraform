@@ -1,3 +1,10 @@
+# resource "null_resource" "eksadd" {
+#   depends_on = [null_resource.eks_context]
+#   provisioner "local-exec" {
+#     command = "helm repo add eks https://aws.github.io/eks-charts"
+#   }
+# }
+
 resource "aws_eks_addon" "vpc-cni" {
   cluster_name = aws_eks_cluster.kristo.name
   addon_name   = "vpc-cni"
@@ -32,6 +39,8 @@ resource "aws_eks_addon" "aws-ebs-csi-driver" {
   addon_name   = "aws-ebs-csi-driver"
 }
 
+
+
 resource "helm_release" "alb" {
   depends_on        = [aws_eks_node_group.kristo]
   dependency_update = true
@@ -61,5 +70,12 @@ resource "null_resource" "pod" {
   depends_on = [helm_release.alb]
   provisioner "local-exec" {
     command = "kubectl apply -f ./eks_manifests/2048.yaml"
+  }
+}
+
+data "aws_lb" "test" {
+  depends_on = [null_resource.pod]
+  tags = {
+    author = "Kristo"
   }
 }

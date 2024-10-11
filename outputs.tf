@@ -6,6 +6,10 @@
 # value = var.common_tags
 # }
 
+# output "lb_dns" {
+#   value = local.website
+# }
+
 output "lb_dns" {
-  value = local.website
+  value = data.aws_lb.test.dns_name
 }

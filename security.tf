@@ -16,7 +16,7 @@ resource "aws_security_group" "eks_sg" {
   name        = "cluster_sg"
   description = "Security group for the eks cluster"
   vpc_id      = aws_vpc.relic.id
-  tags = merge(var.common_tags, { "kubernetes.io/cluster/kristo-cluster" = "shared" })
+  tags        = merge(var.common_tags, { "kubernetes.io/cluster/kristo-cluster" = "shared" })
 
   egress {
     from_port   = 0
