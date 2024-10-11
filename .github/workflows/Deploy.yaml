@@ -44,7 +44,7 @@ jobs:
       - name: Terraform Apply Infrastructure
         if: github.event.inputs.state == ''
         run: terraform apply -auto-approve
-      - name: Terraform Plan Infrastructure with S3 state
+      - name: Terraform Apply Infrastructure with S3 state
         if: github.event.inputs.state != ''
         run: terraform apply -auto-approve -state-out="$GITHUB_REF_NAME.tfstate"
       - name: Copy state to S3
