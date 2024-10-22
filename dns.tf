@@ -45,8 +45,8 @@ resource "aws_route53_record" "lb_dns" {
   allow_overwrite = true
 
   alias {
-    zone_id                = aws_lb.kristo.zone_id
-    name                   = aws_lb.kristo.dns_name
+    zone_id                = data.aws_lb.pod.zone_id
+    name                   = data.aws_lb.pod.dns_name
     evaluate_target_health = true
   }
 }
