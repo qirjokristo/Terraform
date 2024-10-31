@@ -4,7 +4,13 @@ resource "null_resource" "cmd" {
   }
 }
 
+resource "time_sleep" "zones_wr" {
+  depends_on      = [null_resource.cmd]
+  create_duration = "5s"
+}
+
 data "aws_route53_zone" "website" {
+  depends_on   = [time_sleep.zones_wr]
   name         = local.apex_zone
   private_zone = false
 }
