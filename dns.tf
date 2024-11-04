@@ -1,4 +1,4 @@
-resource "null_resource" "cmd" {
+resource "null_resource" "dns" {
   provisioner "local-exec" {
     command = "aws route53 list-hosted-zones-by-name > ./templates/zones.tpl"
   }
