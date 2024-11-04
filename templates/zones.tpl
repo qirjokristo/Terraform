@@ -1,26 +1,16 @@
 {
     "HostedZones": [
         {
-            "Id": "/hostedzone/Z10228533OLCX6ACN8OKE",
-            "Name": "533267334585.realhandsonlabs.net.",
-            "CallerReference": "533267334585.realhandsonlabs.net2024-06-24 15:24:03.365037",
-            "Config": {
-                "Comment": "",
-                "PrivateZone": false
-            },
-            "ResourceRecordSetCount": 4
-        },
-        {
-            "Id": "/hostedzone/Z05774212VDV5G1Z017IN",
-            "Name": "533267334585.realhandsonlabs.net.",
-            "CallerReference": "06c3b611-ff10-4bac-9e69-1f6911502c19",
+            "Id": "/hostedzone/Z01834751TCS458NUAANY",
+            "Name": "058264419859.realhandsonlabs.net.",
+            "CallerReference": "058264419859.realhandsonlabs.net2024-06-24 15:17:51.454422",
             "Config": {
                 "Comment": "",
                 "PrivateZone": false
             },
             "ResourceRecordSetCount": 2
         }
-    ],
+    ],a
     "IsTruncated": false,
     "MaxItems": "100"
 }

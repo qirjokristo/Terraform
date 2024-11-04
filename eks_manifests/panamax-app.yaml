@@ -50,6 +50,7 @@ metadata:
     alb.ingress.kubernetes.io/subnets: Public subnet 1, Public subnet 2, Public subnet 3, Public subnet 4, Public subnet 5
     alb.ingress.kubernetes.io/tags: environment=Sandbox, author=Kristo
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
     alb.ingress.kubernetes.io/target-type: ip
 spec:
   ingressClassName: alb

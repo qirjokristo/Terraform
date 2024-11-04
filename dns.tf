@@ -11,7 +11,7 @@ resource "time_sleep" "zones_wr" {
 
 data "aws_route53_zone" "panamax" {
   depends_on   = [time_sleep.zones_wr]
-  name         = local.apex_zone[0]
+  name         = local.apex_zone
   private_zone = false
 }
 

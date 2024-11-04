@@ -21,10 +21,12 @@ terraform plan
 terraform apply
 
 ##################### FOR TESTING ##############################
-aws secretsmanager restore-secret --secret-id kristosecret
+aws secretsmanager restore-secret --secret-id panamax-secret
 
-terraform import aws_secretsmanager_secret.rds kristosecret
+terraform import aws_secretsmanager_secret.rds panamax-secret
 
 ############### ADD EKS CHARTS REPO ###########################
 
-helm repo add eks https //aws.github.io/eks-charts
+helm repo add eks https://aws.github.io/eks-charts
+
+helm repo update
