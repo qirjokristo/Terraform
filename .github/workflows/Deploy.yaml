@@ -40,7 +40,7 @@ jobs:
       - name: Terraform validate
         run: terraform validate
       - name: Terraform Apply DNS
-        run: terraform apply -target="null_resource.cmd" -auto-approve
+        run: terraform apply -target="null_resource.dns" -auto-approve
       - name: Terraform Apply Infrastructure
         if: github.event.inputs.state == ''
         run: terraform apply -auto-approve
