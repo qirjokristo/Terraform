@@ -10,7 +10,7 @@
             },
             "ResourceRecordSetCount": 2
         }
-    ],a
+    ],
     "IsTruncated": false,
     "MaxItems": "100"
 }

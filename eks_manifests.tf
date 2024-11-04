@@ -1,10 +1,10 @@
-# resource "null_resource" "acm" {
-#   depends_on = [helm_release.alb, aws_acm_certificate_validation.dns]
-#   provisioner "local-exec" {
-#     interpreter = [ "/bin/bash" ]
-#     command = "sed -i '49 a    alb.ingress.kubernetes.io/certificate-arn: ${aws_acm_certificate.ssl.arn}' eks_manifests/panamax-app.yaml"
-#   }
-# }
+resource "null_resource" "acm" {
+  depends_on = [helm_release.alb, aws_acm_certificate_validation.dns]
+  provisioner "local-exec" {
+    interpreter = [ "/bin/bash" ]
+    command = "sed -i '49 a    alb.ingress.kubernetes.io/certificate-arn: ${aws_acm_certificate.ssl.arn}' eks_manifests/panamax-app.yaml"
+  }
+}
 
 
 resource "null_resource" "pod" {

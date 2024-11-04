@@ -4,7 +4,6 @@ resource "aws_eks_cluster" "panamax" {
   tags     = var.common_tags
   vpc_config {
     subnet_ids              = [aws_subnet.pub[0].id, aws_subnet.pub[1].id, aws_subnet.pub[2].id]
-    security_group_ids      = [aws_security_group.eks_sg.id]
     endpoint_public_access  = true
     endpoint_private_access = true
   }
@@ -20,7 +19,6 @@ resource "null_resource" "eks_context" {
 resource "aws_launch_template" "panamax" {
   name                   = "nodegroup-lt"
   instance_type          = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.eks_sg.id]
   tags                   = var.common_tags
   tag_specifications {
     resource_type = "instance"
