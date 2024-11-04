@@ -8,7 +8,7 @@ resource "null_resource" "acm" {
 
 
 resource "null_resource" "pod" {
-  depends_on = [helm_release.alb, aws_acm_certificate_validation.dns]
+  depends_on = [helm_release.alb, aws_acm_certificate_validation.dns, null_resource.acm]
   provisioner "local-exec" {
     command = "kubectl apply -f ./eks_manifests/panamax-app.yaml"
   }
