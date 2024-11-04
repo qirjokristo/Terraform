@@ -1,7 +1,7 @@
 resource "aws_security_group" "elb_sg" {
   name        = "alb_sg"
   description = "Security group for the load balancer"
-  vpc_id      = aws_vpc.relic.id
+  vpc_id      = aws_vpc.panamax.id
   tags        = var.common_tags
 
   egress {
@@ -14,9 +14,9 @@ resource "aws_security_group" "elb_sg" {
 
 resource "aws_security_group" "eks_sg" {
   name        = "cluster_sg"
-  description = "Security group for the eks cluster"
-  vpc_id      = aws_vpc.relic.id
-  tags        = merge(var.common_tags, { "kubernetes.io/cluster/kristo-cluster" = "shared" })
+  description = "Security group for the EKS cluster"
+  vpc_id      = aws_vpc.panamax.id
+  tags        = merge(var.common_tags, { "kubernetes.io/cluster/panamax-cluster" = "shared" })
 
   egress {
     from_port   = 0
@@ -29,7 +29,7 @@ resource "aws_security_group" "eks_sg" {
 resource "aws_security_group" "rds_sg" {
   name        = "db_sg"
   description = "Security group for the database"
-  vpc_id      = aws_vpc.relic.id
+  vpc_id      = aws_vpc.panamax.id
   tags        = var.common_tags
   egress {
     from_port   = 0

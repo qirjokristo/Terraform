@@ -8,7 +8,7 @@ variable "common_tags" {
   default = {
     author      = "Kristo"
     environment = "Sandbox"
-    project     = "Terraform Infrastructure Learning"
+    project     = "Panamax"
   }
 }
 
@@ -22,7 +22,7 @@ variable "kube_tags" {
   default = {
     author      = "Kristo"
     environment = "Sandbox"
-    project     = "Terraform Infrastructure Learning"
+    project     = "Panamax"
   }
 }
 
@@ -43,13 +43,6 @@ variable "db_user" {
   description = "Database master username credentials"
   type        = string
   default     = "admin"
-
-}
-
-variable "files" {
-  type        = list(string)
-  description = "Files to be uploaded to S3"
-  default     = ["files/authentication.php", "files/aws.zip", "files/connection.php", "files/index.html", "files/style.css"]
 
 }
 

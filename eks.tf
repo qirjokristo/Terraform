@@ -1,5 +1,5 @@
-resource "aws_eks_cluster" "kristo" {
-  name     = "kristo-cluster"
+resource "aws_eks_cluster" "panamax" {
+  name     = "panamax-cluster"
   role_arn = aws_iam_role.ekscontrol.arn
   tags     = var.common_tags
   vpc_config {
@@ -11,13 +11,13 @@ resource "aws_eks_cluster" "kristo" {
 }
 
 resource "null_resource" "eks_context" {
-  depends_on = [aws_eks_cluster.kristo]
+  depends_on = [aws_eks_cluster.panamax]
   provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --name kristo-cluster --region ${var.region}"
+    command = "aws eks update-kubeconfig --name panamax-cluster --region ${var.region}"
   }
 }
 
-resource "aws_launch_template" "nodegroup" {
+resource "aws_launch_template" "panamax" {
   name                   = "nodegroup-lt"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.eks_sg.id]
@@ -32,12 +32,12 @@ resource "aws_launch_template" "nodegroup" {
   }
 }
 
-resource "aws_eks_node_group" "kristo" {
-  depends_on      = [aws_launch_template.nodegroup, null_resource.calico]
-  cluster_name    = aws_eks_cluster.kristo.name
+resource "aws_eks_node_group" "panamax" {
+  depends_on      = [aws_launch_template.panamax, null_resource.calico]
+  cluster_name    = aws_eks_cluster.panamax.name
   subnet_ids      = aws_subnet.pub[*].id
   node_role_arn   = aws_iam_role.eksworker.arn
-  node_group_name = "kristo-ng"
+  node_group_name = "panamax-ng"
   tags            = var.common_tags
   scaling_config {
     desired_size = 3
@@ -45,10 +45,3 @@ resource "aws_eks_node_group" "kristo" {
     min_size     = 2
   }
 }
-
-# resource "null_resource" "dockerfile_build" {
-#   depends_on = [aws_eks_cluster.kristo]
-#   provisioner "local-exec" {
-#     command = "aws eks update-kubeconfig --name kristo-cluster --region ${var.region}"
-#   }
-# }

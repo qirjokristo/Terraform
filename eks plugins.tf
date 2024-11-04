@@ -6,12 +6,12 @@
 # }
 
 resource "aws_eks_addon" "vpc-cni" {
-  cluster_name = aws_eks_cluster.kristo.name
+  cluster_name = aws_eks_cluster.panamax.name
   addon_name   = "vpc-cni"
 }
 
 resource "aws_eks_addon" "eks-pod-identity-agent" {
-  cluster_name = aws_eks_cluster.kristo.name
+  cluster_name = aws_eks_cluster.panamax.name
   addon_name   = "eks-pod-identity-agent"
 }
 
@@ -23,7 +23,7 @@ resource "null_resource" "calico" {
 }
 
 # resource "helm_release" "calico" {
-#   depends_on = [ aws_eks_node_group.kristo ]
+#   depends_on = [ aws_eks_node_group.panamax ]
 #   dependency_update = true
 #   name       = "tigera-operator"
 #   repository = "https://docs.tigera.io/calico/charts"
@@ -34,15 +34,15 @@ resource "null_resource" "calico" {
 # }
 
 resource "aws_eks_addon" "aws-ebs-csi-driver" {
-  depends_on   = [aws_eks_node_group.kristo]
-  cluster_name = aws_eks_cluster.kristo.name
+  depends_on   = [aws_eks_node_group.panamax]
+  cluster_name = aws_eks_cluster.panamax.name
   addon_name   = "aws-ebs-csi-driver"
 }
 
 
 
 resource "helm_release" "alb" {
-  depends_on        = [aws_eks_node_group.kristo]
+  depends_on        = [aws_eks_node_group.panamax]
   dependency_update = true
   name              = "aws-load-balancer-controller"
   repository        = "https://aws.github.io/eks-charts"

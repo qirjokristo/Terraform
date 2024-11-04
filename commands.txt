@@ -12,7 +12,7 @@ aws sts get-caller-identity
 
 ################################################################
 
-terraform apply -target="null_resource.cmd"
+terraform apply -target="null_resource.dns"
 
 ################################################################
 

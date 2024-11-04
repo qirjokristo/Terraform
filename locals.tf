@@ -1,6 +1,5 @@
 locals {
-  json1     = substr(file("${path.module}/templates/zones.tpl"), 25, 378)
-  zone      = jsondecode(local.json1)
-  apex_zone = trimsuffix(local.zone.Name, ".")
-  website   = "https://${data.aws_route53_zone.website.name}"
+  website   = "https://${data.aws_route53_zone.panamax.name}"
+  json      =  jsondecode(file("${path.module}/templates/zones.tpl"))
+  apex_zone = trimsuffix(local.json.HostedZones[0].Name,".")
 }

@@ -27,26 +27,18 @@ data "aws_iam_policy" "ebsdriver" {
 }
 
 resource "aws_iam_role" "ekscontrol" {
-  name               = "KristoEKSControlRole"
+  name               = "PanamaxEKSControlRole"
   tags               = var.common_tags
   assume_role_policy = file("${path.module}/iam_policies/sts_eks.json")
 
 }
 
 resource "aws_iam_role" "eksworker" {
-  name               = "KristoEKSWorkerRole"
+  name               = "PanamaxEKSWorkerRole"
   tags               = var.common_tags
   assume_role_policy = file("${path.module}/iam_policies/sts_ec2.json")
 
 }
-
-# resource "aws_iam_role_policy" "s3" {
-#   name = "s3_admin"
-#   role = aws_iam_role.eksworker.id
-#   policy = (templatefile("${path.module}/iam_policies/s3.json", {
-#     bucket = aws_s3_bucket.kristo.arn }
-#   ))
-# }
 
 resource "aws_iam_role_policy" "secret" {
   name = "secret_retrieve"

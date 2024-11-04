@@ -1,10 +1,10 @@
 data "tls_certificate" "oidc" {
-  url = aws_eks_cluster.kristo.identity[0].oidc[0].issuer
+  url = aws_eks_cluster.panamax.identity[0].oidc[0].issuer
 }
 
 
 resource "aws_iam_openid_connect_provider" "eks" {
-  url             = aws_eks_cluster.kristo.identity[0].oidc[0].issuer
+  url             = aws_eks_cluster.panamax.identity[0].oidc[0].issuer
   client_id_list  = ["sts.amazonaws.com"]
   tags            = var.common_tags
   thumbprint_list = [data.tls_certificate.oidc.certificates[0].sha1_fingerprint]
