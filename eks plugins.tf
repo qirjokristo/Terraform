@@ -27,6 +27,12 @@ resource "aws_eks_addon" "aws-ebs-csi-driver" {
   addon_name   = "aws-ebs-csi-driver"
 }
 
+resource "aws_eks_addon" "pod-identity" {
+  depends_on   = [aws_eks_node_group.panamax]
+  cluster_name = aws_eks_cluster.panamax.name
+  addon_name   = "eks-pod-identity-agent"
+}
+
 resource "helm_release" "alb" {
   depends_on        = [aws_eks_node_group.panamax]
   dependency_update = true

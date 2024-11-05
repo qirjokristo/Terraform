@@ -12,6 +12,7 @@ resource "aws_secretsmanager_secret_version" "rds" {
     password            = random_password.rds.result,
     host                = aws_db_instance.panamax.address,
     dbClusterIdentifier = "panamax-db"
+    db_name = aws_db_instance.panamax.db_name
   })
 }
   

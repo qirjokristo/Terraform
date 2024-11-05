@@ -4,12 +4,18 @@ kind: Namespace
 metadata:
   name: panamax-app
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: panamax
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: panamax-app
   name: panamax-deployment
 spec:
+  serviceaccountname: panamax-app
   selector:
     matchLabels:
       app.kubernetes.io/name: panamax-app
