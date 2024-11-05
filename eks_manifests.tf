@@ -1,7 +1,7 @@
 resource "null_resource" "acm" {
   depends_on = [helm_release.alb, aws_acm_certificate_validation.dns]
   provisioner "local-exec" {
-    command = "sed -i '50 a \    alb.ingress.kubernetes.io/certificate-arn: ${aws_acm_certificate.ssl.arn}' eks_manifests/panamax-app.yaml"
+    command = "sed -i '50 a \\    alb.ingress.kubernetes.io/certificate-arn: ${aws_acm_certificate.ssl.arn}' eks_manifests/panamax-app.yaml"
   }
 }
 
