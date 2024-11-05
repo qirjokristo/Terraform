@@ -7,6 +7,7 @@ metadata:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
+  namespace: panamax-app
   name: panamax
 ---
 apiVersion: apps/v1
@@ -15,7 +16,6 @@ metadata:
   namespace: panamax-app
   name: panamax-deployment
 spec:
-  serviceaccountname: panamax-app
   selector:
     matchLabels:
       app.kubernetes.io/name: panamax-app
@@ -25,6 +25,7 @@ spec:
       labels:
         app.kubernetes.io/name: panamax-app
     spec:
+      serviceAccountName: panamax
       containers:
       - image: qirjokristo/panamax:latest
         imagePullPolicy: Always
@@ -53,6 +54,7 @@ metadata:
   name: panamax-ingress
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:211125606152:certificate/a72e6870-3141-4d11-a1b0-4ec932d69ad6
     alb.ingress.kubernetes.io/subnets: Public subnet 1, Public subnet 2, Public subnet 3, Public subnet 4, Public subnet 5
     alb.ingress.kubernetes.io/tags: environment=Sandbox, author=Kristo
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
