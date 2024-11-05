@@ -20,7 +20,7 @@ spec:
         app.kubernetes.io/name: panamax-app
     spec:
       containers:
-      - image: qirjokristo/terraform:latest
+      - image: qirjokristo/panamax:latest
         imagePullPolicy: Always
         name: panamax-app
         ports:
