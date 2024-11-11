@@ -40,7 +40,7 @@ resource "aws_eks_node_group" "panamax" {
   subnet_ids    = aws_subnet.pub[*].id
   node_role_arn = aws_iam_role.eksworker.arn
   launch_template {
-    id      = aws_launch_template.panamax
+    id      = aws_launch_template.panamax.id
     version = aws_launch_template.panamax.latest_version
   }
   node_group_name = "panamax-ng"
