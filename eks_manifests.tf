@@ -17,14 +17,6 @@ resource "time_sleep" "ingress" {
   create_duration = "30s"
 }
 
-resource "aws_eks_pod_identity_association" "panamax" {
-  depends_on      = [time_sleep.ingress]
-  cluster_name    = aws_eks_cluster.panamax.name
-  role_arn        = aws_iam_role.pod.arn
-  namespace       = "panamax-app"
-  service_account = "panamax"
-}
-
 data "aws_lb" "pod" {
   depends_on = [time_sleep.ingress]
   tags = {

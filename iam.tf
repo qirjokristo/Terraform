@@ -40,16 +40,9 @@ resource "aws_iam_role" "eksworker" {
 
 }
 
-resource "aws_iam_role" "pod" {
-  name               = "PanamaxPodRole"
-  tags               = var.common_tags
-  assume_role_policy = file("${path.module}/iam_policies/sts_pods.json")
-
-}
-
 resource "aws_iam_role_policy" "secret" {
   name = "secret_retrieve"
-  role = aws_iam_role.pod.id
+  role = aws_iam_role.eksworker.id
   policy = (templatefile("${path.module}/iam_policies/secret.json", {
     secret = aws_secretsmanager_secret.rds.arn }
   ))
@@ -98,19 +91,4 @@ resource "aws_iam_role_policy_attachment" "W_ALBController" {
 resource "aws_iam_instance_profile" "EKSWorker" {
   name = "EKS_Worker_Instance_Profile"
   role = aws_iam_role.eksworker.name
-}
-
-resource "aws_iam_role_policy_attachment" "P_NodePolicy" {
-  policy_arn = data.aws_iam_policy.eksworker.arn
-  role       = aws_iam_role.pod.name
-}
-
-resource "aws_iam_role_policy_attachment" "P_CNI_Policy" {
-  policy_arn = data.aws_iam_policy.ekscni.arn
-  role       = aws_iam_role.pod.name
-}
-
-resource "aws_iam_role_policy_attachment" "P_EC2ContainerRegistryReadOnly" {
-  policy_arn = data.aws_iam_policy.eksecrread.arn
-  role       = aws_iam_role.pod.name
 }
