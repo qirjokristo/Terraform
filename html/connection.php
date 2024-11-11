@@ -1,22 +1,14 @@
 <?php
 
- 
-
 require 'aws-autoloader.php';
 use Aws\SecretsManager\SecretsManagerClient;
 use Aws\Exception\AwsException;
 
- 
-
-$client = new SecretsManagerClient([
+ $client = new SecretsManagerClient([
     'region' => 'us-east-1',
 ]);
 
- 
-
 $secretName = 'panamax-secret';
-
- 
 
 try {
     $result = $client->getSecretValue([
@@ -41,22 +33,16 @@ try {
     }
 }
 
- 
-
 if (isset($result['SecretString'])) {
     $secret = $result['SecretString'];
 } else {
     $secret = base64_decode($result['SecretBinary']);
 }
-
- 
 $secretArray = json_decode($secret, true);
 $user = $secretArray['username'];
 $password = $secretArray['password'];
 $host = $secretArray['host'];
 $db_name = "project";
-
- 
 
 $con = mysqli_connect($host, $user, $password, $db_name);
 if (mysqli_connect_errno()) {
