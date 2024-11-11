@@ -17,9 +17,8 @@ resource "null_resource" "eks_context" {
 }
 
 resource "aws_launch_template" "panamax" {
-  name          = "nodegroup-lt"
-  instance_type = "t2.micro"
-  tags          = var.common_tags
+  name = "nodegroup-lt"
+  tags = var.common_tags
   tag_specifications {
     resource_type = "instance"
     tags          = merge(var.common_tags, { Name = "Panamax--cluster-node" })
