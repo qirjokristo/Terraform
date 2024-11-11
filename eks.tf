@@ -28,8 +28,9 @@ resource "aws_launch_template" "panamax" {
     tags          = merge(var.common_tags, { Name = "Panamax--cluster-node" })
   }
   metadata_options {
-    http_tokens                 = "optional"
-    http_put_response_hop_limit = 64
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 2
   }
 }
 
