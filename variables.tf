@@ -51,3 +51,9 @@ variable "region" {
   description = "Region to be deployed to"
   default     = "us-east-1"
 }
+
+variable "project" {
+  type = string
+  description = "The name of the project"
+  default = "panamax"
+}

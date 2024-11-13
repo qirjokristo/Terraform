@@ -27,14 +27,14 @@ data "aws_iam_policy" "ebsdriver" {
 }
 
 resource "aws_iam_role" "ekscontrol" {
-  name               = "PanamaxEKSControlRole"
+  name               = "${var.project}EKSControlRole"
   tags               = var.common_tags
   assume_role_policy = file("${path.module}/iam_policies/sts_eks.json")
 
 }
 
 resource "aws_iam_role" "eksworker" {
-  name               = "PanamaxEKSWorkerRole"
+  name               = "${var.project}EKSWorkerRole"
   tags               = var.common_tags
   assume_role_policy = file("${path.module}/iam_policies/sts_ec2.json")
 
@@ -89,6 +89,6 @@ resource "aws_iam_role_policy_attachment" "W_ALBController" {
 }
 
 resource "aws_iam_instance_profile" "EKSWorker" {
-  name = "EKS_Worker_Instance_Profile"
+  name = "${var.project}_EKS_Worker_Instance_Profile"
   role = aws_iam_role.eksworker.name
 }

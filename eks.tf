@@ -1,5 +1,5 @@
 resource "aws_eks_cluster" "panamax" {
-  name     = "panamax-cluster"
+  name     = "${var.project}-cluster"
   role_arn = aws_iam_role.ekscontrol.arn
   tags     = var.common_tags
   vpc_config {
@@ -12,7 +12,7 @@ resource "aws_eks_cluster" "panamax" {
 resource "null_resource" "eks_context" {
   depends_on = [aws_eks_cluster.panamax]
   provisioner "local-exec" {
-    command = "aws eks update-kubeconfig --name panamax-cluster --region ${var.region}"
+    command = "aws eks update-kubeconfig --name ${var.project}-cluster --region ${var.region}"
   }
 }
 
@@ -21,7 +21,7 @@ resource "aws_launch_template" "panamax" {
   tags = var.common_tags
   tag_specifications {
     resource_type = "instance"
-    tags          = merge(var.common_tags, { Name = "Panamax--cluster-node" })
+    tags          = merge(var.common_tags, { Name = "${var.project}-cluster-node" })
   }
   metadata_options {
     http_endpoint               = "enabled"
@@ -39,7 +39,7 @@ resource "aws_eks_node_group" "panamax" {
     id      = aws_launch_template.panamax.id
     version = aws_launch_template.panamax.latest_version
   }
-  node_group_name = "panamax-ng"
+  node_group_name = "${var.project}-ng"
   tags            = var.common_tags
   scaling_config {
     desired_size = 3

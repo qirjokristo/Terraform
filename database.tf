@@ -5,7 +5,7 @@ resource "aws_db_subnet_group" "rds" {
 }
 
 resource "aws_db_instance" "panamax" {
-  identifier             = "panamax-db"
+  identifier             = "${var.project}-db"
   allocated_storage      = 10
   engine                 = "mysql"
   instance_class         = "db.t3.micro"

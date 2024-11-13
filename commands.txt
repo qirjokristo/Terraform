@@ -30,3 +30,10 @@ terraform import aws_secretsmanager_secret.rds panamax-secret
 helm repo add eks https://aws.github.io/eks-charts
 
 helm repo update
+
+####################### MYSQL #################################
+
+mysql --host=panamax-db.cvqmyskoeb4r.us-east-1.rds.amazonaws.com --user=admin --password=NgAqLLdINlqwGgwwoOkbnjLa --execute "USE project;
+CREATE TABLE login (username varchar(10),password varchar(10));
+INSERT INTO login VALUES ('kristo','qirjo'),('marko','skendo'),('ardit','shehu');
+"
