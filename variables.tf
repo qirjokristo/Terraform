@@ -53,7 +53,7 @@ variable "region" {
 }
 
 variable "project" {
-  type = string
+  type        = string
   description = "The name of the project"
-  default = "panamax"
+  default     = "panamax"
 }

@@ -13,7 +13,7 @@ resource "aws_subnet" "pub" {
   cidr_block              = cidrsubnet(aws_vpc.panamax.cidr_block, 8, count.index)
   availability_zone       = data.aws_availability_zones.online.names[count.index]
   map_public_ip_on_launch = true
-  tags                    = merge(var.common_tags, { Name = "${var.project} Public subnet ${1 + count.index}" })
+  tags                    = merge(var.common_tags, { Name = "${var.project}_public_subnet_${1 + count.index}" })
 }
 
 resource "aws_subnet" "priv" {
@@ -22,7 +22,7 @@ resource "aws_subnet" "priv" {
   cidr_block              = cidrsubnet(aws_vpc.panamax.cidr_block, 8, count.index + 100)
   availability_zone       = data.aws_availability_zones.online.names[count.index]
   map_public_ip_on_launch = false
-  tags                    = merge(var.common_tags, { Name = "${var.project} Private subnet ${1 + count.index}" })
+  tags                    = merge(var.common_tags, { Name = "${var.project}_private_subnet_${1 + count.index}" })
 
 
 }
