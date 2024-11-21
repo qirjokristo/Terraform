@@ -12,6 +12,19 @@ resource "null_resource" "sub" {
   }
 }
 
+resource "null_resource" "sql" {
+  provisioner "local-exec" {
+    command = "sed -i '8 a \\    command: [\"/bin/sh\", \"-\", \"mysql --host=panamax-db.cxakkgum4jiz.us-east-1.rds.amazonaws.com --user=admin --password=We0B9rjP7FbGTiGwoaMgQkPC' eks_manifests/mysql.yaml"
+  }
+}
+
+resource "null_resource" "mysql" {
+  depends_on = [helm_release.alb, null_resource.sub]
+  provisioner "local-exec" {
+    command = "kubectl apply -f ./eks_manifests/mysql.yaml"
+  }
+}
+
 resource "null_resource" "pod" {
   depends_on = [helm_release.alb, null_resource.sub]
   provisioner "local-exec" {

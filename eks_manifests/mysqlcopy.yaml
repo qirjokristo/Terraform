@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+spec:
+  restartPolicy: Never
+  containers:
+  - name: mysql
+    image: mysql
+     --execute='USE project; CREATE TABLE IF NOT EXISTS login (username varchar(10), password varchar(10)); INSERT IGNORE INTO login VALUES (\"kristo\", \"qirjo\");'"]
