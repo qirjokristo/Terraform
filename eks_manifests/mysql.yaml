@@ -7,4 +7,7 @@ spec:
   - name: mysql
     image: mysql
     command: ["/bin/sh", "-", "mysql --host=panamax-db.cxakkgum4jiz.us-east-1.rds.amazonaws.com --user=admin --password=We0B9rjP7FbGTiGwoaMgQkPC
+    command: ["/bin/sh", "-", "mysql --host=panamax-db.cxakkgum4jiz.us-east-1.rds.amazonaws.com --user=admin --password=We0B9rjP7FbGTiGwoaMgQkPC
+    command: ["/bin/sh", "-", "mysql --host=panamax-db.cxakkgum4jiz.us-east-1.rds.amazonaws.com --user=admin --password=We0B9rjP7FbGTiGwoaMgQkPC
+    command: ["/bin/sh", "-", "mysql --host=panamax-db.cxakkgum4jiz.us-east-1.rds.amazonaws.com --user=admin --password=We0B9rjP7FbGTiGwoaMgQkPC
  --execute='USE project; CREATE TABLE IF NOT EXISTS login (username varchar(10), password varchar(10)); INSERT IGNORE INTO login VALUES (\"kristo\", \"qirjo\");'"]
