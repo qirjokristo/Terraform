@@ -1,7 +1,7 @@
 resource "aws_eks_cluster" "panamax" {
   name     = "${var.project}-cluster"
   role_arn = aws_iam_role.ekscontrol.arn
-  tags     = var.common_tags
+  tags     = local.common_tags
   vpc_config {
     subnet_ids              = [aws_subnet.pub[0].id, aws_subnet.pub[1].id, aws_subnet.pub[2].id]
     endpoint_public_access  = true
@@ -18,10 +18,10 @@ resource "null_resource" "eks_context" {
 
 resource "aws_launch_template" "panamax" {
   name = "nodegroup-lt"
-  tags = var.common_tags
+  tags = local.common_tags
   tag_specifications {
     resource_type = "instance"
-    tags          = merge(var.common_tags, { Name = "${var.project}-cluster-node" })
+    tags          = merge(local.common_tags, { Name = "${var.project}-cluster-node" })
   }
   metadata_options {
     http_endpoint               = "enabled"
@@ -40,7 +40,7 @@ resource "aws_eks_node_group" "panamax" {
     version = aws_launch_template.panamax.latest_version
   }
   node_group_name = "${var.project}-ng"
-  tags            = var.common_tags
+  tags            = local.common_tags
   scaling_config {
     desired_size = 3
     max_size     = 6

@@ -6,13 +6,13 @@ data "tls_certificate" "oidc" {
 resource "aws_iam_openid_connect_provider" "eks" {
   url             = aws_eks_cluster.panamax.identity[0].oidc[0].issuer
   client_id_list  = ["sts.amazonaws.com"]
-  tags            = var.common_tags
+  tags            = local.common_tags
   thumbprint_list = [data.tls_certificate.oidc.certificates[0].sha1_fingerprint]
 }
 
 resource "aws_iam_role" "alb" {
   name = "AmazonEKSLoadBalancerControllerRole"
-  tags = var.common_tags
+  tags = local.common_tags
   assume_role_policy = (templatefile("${path.module}/iam_policies/sts_alb.json", {
     oidc = aws_iam_openid_connect_provider.eks.arn }
   ))

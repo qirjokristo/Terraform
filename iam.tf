@@ -28,14 +28,14 @@ data "aws_iam_policy" "ebsdriver" {
 
 resource "aws_iam_role" "ekscontrol" {
   name               = "${var.project}EKSControlRole"
-  tags               = var.common_tags
+  tags               = local.common_tags
   assume_role_policy = file("${path.module}/iam_policies/sts_eks.json")
 
 }
 
 resource "aws_iam_role" "eksworker" {
   name               = "${var.project}EKSWorkerRole"
-  tags               = var.common_tags
+  tags               = local.common_tags
   assume_role_policy = file("${path.module}/iam_policies/sts_ec2.json")
 
 }

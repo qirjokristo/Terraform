@@ -3,7 +3,7 @@ resource "aws_security_group" "rds_sg" {
   name        = "${var.project}db_sg"
   description = "Security group for the database"
   vpc_id      = aws_vpc.panamax.id
-  tags        = var.common_tags
+  tags        = local.common_tags
   egress {
     from_port   = 0
     to_port     = 0

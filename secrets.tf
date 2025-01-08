@@ -1,7 +1,7 @@
 resource "aws_secretsmanager_secret" "rds" {
   name        = "${var.project}-secret"
   description = "Secret for db credentials"
-  tags        = var.common_tags
+  tags        = local.common_tags
 }
 
 resource "aws_secretsmanager_secret_version" "rds" {
