@@ -1,7 +1,11 @@
+resource "random_password" "rds" {
+  length  = 24
+  special = false
+}
+
 resource "aws_secretsmanager_secret" "rds" {
-  name        = "${var.project}-secret"
   description = "Secret for db credentials"
-  tags        = local.common_tags
+  tags        = merge(local.common_tags, { Name = "${var.project}-secret" })
 }
 
 resource "aws_secretsmanager_secret_version" "rds" {

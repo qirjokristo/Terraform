@@ -41,7 +41,7 @@ resource "aws_iam_role" "eksworker" {
 }
 
 resource "aws_iam_role_policy" "secret" {
-  name = "secret_retrieve"
+  name = "${var.project}_secret_retrieve"
   role = aws_iam_role.eksworker.id
   policy = (templatefile("${path.module}/iam_policies/secret.json", {
     secret = aws_secretsmanager_secret.rds.arn }

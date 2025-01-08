@@ -1,7 +1,3 @@
-# output "online_azs" {
-# value = data.aws_availability_zones.online_azs.names
-# }
-
 output "lb_dns" {
   value = local.website
 }

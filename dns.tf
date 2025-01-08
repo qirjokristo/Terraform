@@ -19,6 +19,7 @@ resource "aws_acm_certificate" "ssl" {
   depends_on        = [data.aws_route53_zone.panamax]
   domain_name       = data.aws_route53_zone.panamax.name
   validation_method = "DNS"
+  tags              = merge(local.common_tags, { Name = "${var.project}-cert" })
 }
 
 resource "aws_acm_certificate_validation" "dns" {
@@ -35,7 +36,6 @@ resource "aws_route53_record" "valid" {
       zone_id = dvo.domain_name
     }
   }
-
   allow_overwrite = true
   name            = each.value.name
   records         = [each.value.record]

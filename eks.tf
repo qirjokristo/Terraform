@@ -17,7 +17,7 @@ resource "null_resource" "eks_context" {
 }
 
 resource "aws_launch_template" "panamax" {
-  name = "nodegroup-lt"
+  name = "${var.project}-nodegroup-lt"
   tags = local.common_tags
   tag_specifications {
     resource_type = "instance"

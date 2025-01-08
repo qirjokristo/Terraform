@@ -4,7 +4,7 @@ data "aws_availability_zones" "online" {
 
 resource "aws_vpc" "panamax" {
   cidr_block = var.vpc_cidr
-  tags       = merge(local.common_tags, { Name = var.project })
+  tags       = merge(local.common_tags, { Name = "${var.project}-vpc" })
 }
 
 resource "aws_subnet" "pub" {
@@ -29,7 +29,7 @@ resource "aws_subnet" "priv" {
 
 resource "aws_internet_gateway" "panamax" {
   vpc_id = aws_vpc.panamax.id
-  tags   = merge(local.common_tags, { Name = var.project })
+  tags   = merge(local.common_tags, { Name = "${var.project}-igw" })
 }
 
 resource "aws_route_table" "panamax" {
@@ -38,7 +38,7 @@ resource "aws_route_table" "panamax" {
     cidr_block = var.cidr_all
     gateway_id = aws_internet_gateway.panamax.id
   }
-  tags = merge(local.common_tags, { Name = var.project })
+  tags = merge(local.common_tags, { Name = "${var.project}-rtb" })
 }
 
 resource "aws_route_table_association" "panamax" {

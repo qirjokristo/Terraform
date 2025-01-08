@@ -6,7 +6,7 @@ data "tls_certificate" "oidc" {
 resource "aws_iam_openid_connect_provider" "eks" {
   url             = aws_eks_cluster.panamax.identity[0].oidc[0].issuer
   client_id_list  = ["sts.amazonaws.com"]
-  tags            = local.common_tags
+  tags            = merge(local.common_tags, { Name = "${var.project}-oidc" })
   thumbprint_list = [data.tls_certificate.oidc.certificates[0].sha1_fingerprint]
 }
 
