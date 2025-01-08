@@ -9,18 +9,6 @@ resource "null_resource" "calico" {
     command = "kubectl apply -f ./eks_manifests/calico.yaml"
   }
 }
-
-# resource "helm_release" "calico" {
-#   depends_on = [ aws_eks_node_group.panamax ]
-#   dependency_update = true
-#   name       = "tigera-operator"
-#   repository = "https://docs.tigera.io/calico/charts"
-#   namespace  = "calico"
-#   create_namespace = true
-#   chart      = "tigera-operator"
-#   values = [ file("${path.module}/eks_manifests/calico_values/values.yaml") ]
-# }
-
 resource "aws_eks_addon" "aws-ebs-csi-driver" {
   depends_on   = [aws_eks_node_group.panamax]
   cluster_name = aws_eks_cluster.panamax.name
