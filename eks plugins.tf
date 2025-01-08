@@ -9,6 +9,7 @@ resource "null_resource" "calico" {
     command = "kubectl apply -f ./eks_manifests/calico.yaml"
   }
 }
+
 resource "aws_eks_addon" "aws-ebs-csi-driver" {
   depends_on   = [aws_eks_node_group.panamax]
   cluster_name = aws_eks_cluster.panamax.name
