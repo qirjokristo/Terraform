@@ -1,5 +1,5 @@
 data "archive_file" "zip" {
-  depends_on       = [aws_instance.kristo]
+  depends_on       = [aws_instance.planarian]
   type             = "zip"
   output_file_mode = "0666"
   source {
@@ -7,7 +7,7 @@ data "archive_file" "zip" {
 import boto3
 
 def lambda_handler(event, context):
-    instance_id = '${aws_instance.kristo.id}'
+    instance_id = '${aws_instance.planarian.id}'
     
     ec2_client = boto3.client('ec2')
     response = ec2_client.terminate_instances(InstanceIds=[instance_id])
@@ -25,12 +25,12 @@ EOF
 
 
 resource "aws_lambda_function" "cleanup" {
-  function_name = "kristo_cleanup"
+  function_name = "planarian_cleanup"
   role          = aws_iam_role.lambda.arn
   runtime       = "python3.8"
   handler       = "lambda_function.lambda_handler"
   filename      = "${path.module}/templates/cleanup.zip"
-  depends_on    = [aws_ami_from_instance.kristo]
+  depends_on    = [aws_ami_from_instance.planarian]
   timeout       = 30
 }
 

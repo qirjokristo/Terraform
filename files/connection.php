@@ -14,7 +14,7 @@ $client = new SecretsManagerClient([
 
  
 
-$secretName = 'kristosecret';
+$secretName = 'planariansecret';
 
  
 

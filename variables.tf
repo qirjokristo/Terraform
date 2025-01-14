@@ -1,23 +1,3 @@
-variable "common_tags" {
-  type = object({
-    author      = string
-    environment = string
-    project     = string
-  })
-  description = "Tags to be used in commonly"
-  default = {
-    author      = "Kristo"
-    environment = "Sandbox"
-    project     = "Terraform Infrastructure Learning"
-  }
-
-}
-
-variable "vpc_cidr" {
-  type        = string
-  description = "Cidr for vpc"
-  default     = "10.233.0.0/16"
-}
 
 variable "cidr_all" {
   type        = string
@@ -38,4 +18,36 @@ variable "files" {
   description = "Files to be uploaded to S3"
   default     = ["files/authentication.php", "files/aws.zip", "files/connection.php", "files/index.html", "files/style.css"]
 
+}
+
+#########CONFIGURE VARIABLES##########################
+
+variable "region" {
+  type        = string
+  description = "The region for the deployment"
+  default     = "us-east-1"
+}
+
+variable "project" {
+  type        = string
+  description = "The name of the project"
+  default     = "planarian"
+}
+
+variable "vpc_cidr" {
+  type        = string
+  description = "Cidr for vpc"
+  default     = "10.233.0.0/16"
+}
+
+variable "db_instance_class" {
+  type        = string
+  description = "The instance class of the database in RDS"
+  default     = "db.t3.micro"
+}
+
+variable "ec2_instance_class" {
+  type        = string
+  description = "The instance class of the instance in the Auto Scaling Group"
+  default     = "t2.micro"
 }

@@ -1,6 +1,6 @@
 resource "aws_iam_role" "ec2" {
-  name               = "kristo_ec2_role"
-  tags               = var.common_tags
+  name               = "planarian_ec2_role"
+  tags               = local.common_tags
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -20,8 +20,8 @@ EOF
 }
 
 resource "aws_iam_role" "lambda" {
-  name               = "kristo_lambda_role"
-  tags               = var.common_tags
+  name               = "planarian_lambda_role"
+  tags               = local.common_tags
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -53,8 +53,8 @@ resource "aws_iam_role_policy" "s3" {
       ],
       "Effect": "Allow",
       "Resource": [
-                "${aws_s3_bucket.kristo.arn}",
-                "${aws_s3_bucket.kristo.arn}/*"
+                "${aws_s3_bucket.planarian.arn}",
+                "${aws_s3_bucket.planarian.arn}/*"
             ]
     }
   ]
@@ -64,7 +64,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "secret" {
-  depends_on = [aws_instance.kristo]
+  depends_on = [aws_instance.planarian]
   name       = "secret_retrieve"
   role       = aws_iam_role.ec2.id
   policy     = <<EOF
@@ -99,7 +99,7 @@ resource "aws_iam_role_policy" "lambda" {
       ],
       "Effect": "Allow",
       "Resource": [
-                "${aws_instance.kristo.arn}"
+                "${aws_instance.planarian.arn}"
             ]
     }
   ]
@@ -109,8 +109,8 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "ec2" {
-  name = "kristo_ec2_profile"
+  name = "planarian_ec2_profile"
   role = aws_iam_role.ec2.name
-  tags = var.common_tags
+  tags = local.common_tags
 }
 
