@@ -10,8 +10,8 @@ resource "aws_instance" "planarian" {
   ami                    = data.aws_ami.ubuntu2004.id
   subnet_id              = aws_subnet.pub[0].id
   iam_instance_profile   = aws_iam_instance_profile.ec2.name
-  tags                   = merge({ Name = "planarian-ec2" }, local.common_tags)
-  instance_type          = "t2.micro"
+  tags                   = merge({ Name = "${var.project}-ec2" }, local.common_tags)
+  instance_type          = var.ec2_instance_class
   depends_on             = [aws_s3_object.files, aws_db_instance.planarian]
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
   root_block_device {
@@ -32,15 +32,15 @@ resource "time_sleep" "wait" {
 
 }
 resource "aws_ami_from_instance" "planarian" {
-  name               = "planarian-golden-ami"
+  name               = "${var.project}-golden-ami"
   source_instance_id = aws_instance.planarian.id
   depends_on         = [time_sleep.wait]
-  tags               = local.common_tags
+  tags                   = merge({ Name = "${var.project}-ami" }, local.common_tags)
 }
 
 
 resource "aws_launch_template" "planarian" {
-  name = "planarian-lt"
+  name = "${var.project}-lt"
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2.name
   }
@@ -56,7 +56,7 @@ resource "aws_launch_template" "planarian" {
 }
 
 resource "aws_autoscaling_group" "planarian" {
-  name                      = "planarian_asg"
+  name                      = "${var.project}_asg"
   min_size                  = 1
   max_size                  = length(data.aws_availability_zones.online.names)
   desired_capacity          = 3

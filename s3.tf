@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "planarian" {
-  bucket = lower("kristo-project-${random_integer.bucket_name.result}")
+  bucket = lower("${var.project}-project-${random_integer.bucket_name.result}")
   tags   = local.common_tags
 }
 resource "aws_s3_object" "files" {

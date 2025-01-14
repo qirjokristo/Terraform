@@ -2,7 +2,7 @@ resource "aws_security_group" "elb_sg" {
   name        = "alb_sg"
   description = "Security group for the load balancer"
   vpc_id      = aws_vpc.planarian.id
-  tags        = local.common_tags
+  tags        = merge(local.common_tags, { Name = "${var.project}_elb_sg" })
 
   egress {
     from_port   = 0
@@ -16,8 +16,7 @@ resource "aws_security_group" "ec2_sg" {
   name        = "server_sg"
   description = "Security group for the template in the asg"
   vpc_id      = aws_vpc.planarian.id
-  tags        = local.common_tags
-
+  tags        = merge(local.common_tags, { Name = "${var.project}_ec2_sg" })
   egress {
     from_port   = 0
     to_port     = 0
@@ -30,7 +29,7 @@ resource "aws_security_group" "rds_sg" {
   name        = "db_sg"
   description = "Security group for the database"
   vpc_id      = aws_vpc.planarian.id
-  tags        = local.common_tags
+  tags        = merge(local.common_tags, { Name = "${var.project}_db_sg" })
   egress {
     from_port   = 0
     to_port     = 0

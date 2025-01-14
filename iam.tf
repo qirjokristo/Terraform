@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ec2" {
-  name               = "planarian_ec2_role"
+  name               = "${var.project}_ec2_role"
   tags               = local.common_tags
   assume_role_policy = <<EOF
 {
@@ -20,7 +20,7 @@ EOF
 }
 
 resource "aws_iam_role" "lambda" {
-  name               = "planarian_lambda_role"
+  name               = "${var.project}_lambda_role"
   tags               = local.common_tags
   assume_role_policy = <<EOF
 {
@@ -109,7 +109,7 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "ec2" {
-  name = "planarian_ec2_profile"
+  name = "${var.project}_ec2_profile"
   role = aws_iam_role.ec2.name
   tags = local.common_tags
 }
