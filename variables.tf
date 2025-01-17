@@ -5,14 +5,6 @@ variable "cidr_all" {
   default     = "0.0.0.0/0"
 }
 
-variable "db_user" {
-  sensitive   = true
-  description = "Database master username credentials"
-  type        = string
-  default     = "admin"
-
-}
-
 variable "files" {
   type        = list(string)
   description = "Files to be uploaded to S3"
@@ -44,6 +36,14 @@ variable "db_instance_class" {
   type        = string
   description = "The instance class of the database in RDS"
   default     = "db.t3.micro"
+}
+
+variable "db_user" {
+  sensitive   = true
+  description = "Database master username credentials"
+  type        = string
+  default     = "admin"
+
 }
 
 variable "ec2_instance_class" {

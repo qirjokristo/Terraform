@@ -17,7 +17,7 @@ resource "aws_lb_target_group" "planarian" {
     protocol            = "HTTP"
     timeout             = 4
   }
-  tags        = merge(local.common_tags, { Name = "${var.project}-asg_tg" })
+  tags = merge(local.common_tags, { Name = "${var.project}-asg_tg" })
 }
 
 resource "aws_lb" "planarian" {
@@ -27,7 +27,7 @@ resource "aws_lb" "planarian" {
   security_groups            = [aws_security_group.elb_sg.id]
   subnets                    = aws_subnet.pub[*].id
   enable_deletion_protection = false
-  tags        = merge(local.common_tags, { Name = "${var.project}-loadbalancer" })
+  tags                       = merge(local.common_tags, { Name = "${var.project}-loadbalancer" })
 }
 
 resource "aws_lb_listener" "https" {
@@ -56,5 +56,5 @@ resource "aws_lb_listener" "http" {
       status_code = "HTTP_301"
     }
   }
-  tags        = merge(local.common_tags, { Name = "${var.project}-listener" })
+  tags = merge(local.common_tags, { Name = "${var.project}-listener" })
 }

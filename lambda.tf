@@ -27,7 +27,7 @@ EOF
 resource "aws_lambda_function" "cleanup" {
   function_name = "${var.project}_cleanup"
   role          = aws_iam_role.lambda.arn
-  tags = merge(local.common_tags, { Name = "${var.project}-ec2-termination" })
+  tags          = merge(local.common_tags, { Name = "${var.project}-ec2-termination" })
   runtime       = "python3.8"
   handler       = "lambda_function.lambda_handler"
   filename      = "${path.module}/templates/cleanup.zip"

@@ -26,7 +26,7 @@ resource "aws_instance" "planarian" {
   )
 }
 
-resource "time_sleep" "wait" {
+resource "time_sleep" "bootstrap_run" {
   depends_on      = [aws_instance.planarian]
   create_duration = "4m"
 
@@ -34,10 +34,9 @@ resource "time_sleep" "wait" {
 resource "aws_ami_from_instance" "planarian" {
   name               = "${var.project}-golden-ami"
   source_instance_id = aws_instance.planarian.id
-  depends_on         = [time_sleep.wait]
-  tags                   = merge({ Name = "${var.project}-ami" }, local.common_tags)
+  depends_on         = [time_sleep.bootstrap_run]
+  tags               = merge({ Name = "${var.project}-ami" }, local.common_tags)
 }
-
 
 resource "aws_launch_template" "planarian" {
   name = "${var.project}-lt"
