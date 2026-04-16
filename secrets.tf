@@ -1,6 +1,6 @@
 resource "aws_secretsmanager_secret" "rds" {
   description = "Secret for db credentials"
-  name        = "planarian-secret"
+  name        = "${var.project}-secret"
   tags        = merge(local.common_tags, { Name = "${var.project}-secret" })
 }
 
